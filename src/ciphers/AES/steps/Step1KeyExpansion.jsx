@@ -1,0 +1,132 @@
+import React, { useState, useEffect } from 'react';
+import MatrixTable from '../../../components/MatrixTable';
+import { rotWord, subWord } from '../../../shared/aes/keyExpansion';
+import { RCON } from '../../../shared/aes/constants';
+import TooltipText from '../../../components/TooltipText';
+
+const Step1KeyExpansion = ({ roundKeys, words, currentStep }) => {
+  const [expandedRounds, setExpandedRounds] = useState([]);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+
+  useEffect(() => {
+    if (currentStep === 1 && !expandedRounds.includes(0)) {
+      setExpandedRounds((prev) => [...prev, 0]);
+    }
+  }, [currentStep]);
+
+  const toggleRound = (round) => {
+    setExpandedRounds((prev) =>
+      prev.includes(round) ? prev.filter((r) => r !== round) : [...prev, round]
+    );
+  };
+
+  return (
+    <div>
+      <h3>Step 1: Key Expansion</h3>
+
+      {roundKeys.map((keyMatrix, round) => {
+        const highlightMap = {};
+        const tooltipMap = {};
+
+        if (hoveredIndex !== null) {
+          const resultIndex = hoveredIndex;
+          const source1Index = resultIndex >= 4 ? resultIndex - 4 : null;
+          const source2Index = resultIndex >= 4 ? resultIndex - 1 : null;
+
+          if (Math.floor(resultIndex / 4) === round) {
+            const col = resultIndex % 4;
+            for (let row = 0; row < 4; row++) {
+              highlightMap[`${row}-${col}`] = 'result';
+            }
+          }
+          if (source1Index !== null && Math.floor(source1Index / 4) === round) {
+            const col = source1Index % 4;
+            for (let row = 0; row < 4; row++) {
+              highlightMap[`${row}-${col}`] = 'source';
+            }
+          }
+          if (source2Index !== null && Math.floor(source2Index / 4) === round) {
+            const col = source2Index % 4;
+            for (let row = 0; row < 4; row++) {
+              highlightMap[`${row}-${col}`] = 'source';
+            }
+          }
+        }
+
+        return (
+          <div key={round} style={{ marginBottom: '1.5rem' }}>
+            <h4
+              style={{ cursor: 'pointer', color: 'var(--primary)' }}
+              onClick={() => toggleRound(round)}
+            >
+              Round {round} Key (Click to {expandedRounds.includes(round) ? 'Collapse' : 'Expand'})
+            </h4>
+
+            <MatrixTable
+              matrix={keyMatrix}
+              highlightMap={highlightMap}
+              tooltipMap={tooltipMap}
+            />
+
+            {expandedRounds.includes(round) && (
+              <div className="explanation-box">
+                {[0, 1, 2, 3].map((colIdx) => {
+                  const i = round * 4 + colIdx;
+                  if (!words || i >= words.length) return null;
+
+                  const wordStr = words[i]?.join(' ')?.toUpperCase();
+                  const wordIminus4 = words[i - 4]?.join(' ')?.toUpperCase();
+                  const wordIminus1 = words[i - 1]?.join(' ')?.toUpperCase();
+                  const rot = i >= 4 ? rotWord(words[i - 1]).join(' ').toUpperCase() : '';
+                  const sub = i >= 4 ? subWord(rotWord(words[i - 1])).join(' ').toUpperCase() : '';
+                  const rconVal = RCON[i / 4]
+                    ? RCON[i / 4].toString(16).padStart(2, '0').toUpperCase()
+                    : '';
+
+                  const isHovered = hoveredIndex === i;
+
+                  return (
+                    <div
+                      key={i}
+                      onMouseEnter={() => setHoveredIndex(i)}
+                      onMouseLeave={() => setHoveredIndex(null)}
+                      style={{
+                        marginBottom: '0.5rem',
+                        backgroundColor: isHovered ? 'var(--highlight-result)' : 'transparent',
+                        padding: '0.5rem',
+                        borderRadius: '6px',
+                      }}
+                    >
+                      {i < 4 ? (
+                        <div>
+                          w[{i}] = [{wordStr}] ← <strong>Original Key Word</strong>
+                        </div>
+                      ) : (
+                        <div>
+                          w[{i}] = [{wordStr}] = w[{i - 4}] ⊕{' '}
+                          <TooltipText tooltip={`[${rot}]`}>
+                            RotWord(w[{i - 1}])
+                          </TooltipText>{' '}
+                          {'->'}{' '}
+                          <TooltipText tooltip={`[${sub}]`}>
+                            SubWord(...)
+                          </TooltipText>{' '}
+                          ⊕{' '}
+                          <TooltipText tooltip={`Rcon Value: ${rconVal}`}>
+                            Rcon[{i / 4}]
+                          </TooltipText>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export default Step1KeyExpansion;
