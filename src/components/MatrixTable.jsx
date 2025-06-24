@@ -1,18 +1,20 @@
+// src/components/MatrixTable.jsx
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const MatrixTable = ({ matrix, highlightMap = {}, tooltipMap = {} }) => (
+const MatrixTable = ({ matrix, highlightMap = {}, tooltipMap = {}, onCellHover = () => {} }) => (
   <table border="1" cellPadding="10">
     <tbody>
       {matrix.map((row, i) => (
         <tr key={i}>
           {row.map((cell, j) => {
             const key = `${i}-${j}`;
-            let bg = 'white';
-            if (highlightMap[key] === 'result') bg = '#c1f0c1'; // light green
-            else if (highlightMap[key] === 'source') bg = '#ffeeba'; // light yellow
-
-            const tooltip = tooltipMap[key];
+            const bg =
+              highlightMap[key] === 'result'
+                ? '#c1f0c1'
+                : highlightMap[key] === 'source'
+                ? '#ffeeba'
+                : 'white';
 
             return (
               <td
@@ -23,8 +25,10 @@ const MatrixTable = ({ matrix, highlightMap = {}, tooltipMap = {} }) => (
                   position: 'relative',
                   fontFamily: 'monospace',
                   padding: '10px',
+                  cursor: tooltipMap[key] ? 'help' : 'default'
                 }}
-                title={tooltip}
+                onMouseEnter={() => onCellHover(key)}
+                onMouseLeave={() => onCellHover(null)}
               >
                 {cell.toUpperCase()}
               </td>
@@ -40,6 +44,7 @@ MatrixTable.propTypes = {
   matrix: PropTypes.array.isRequired,
   highlightMap: PropTypes.object,
   tooltipMap: PropTypes.object,
+  onCellHover: PropTypes.func,
 };
 
 export default MatrixTable;

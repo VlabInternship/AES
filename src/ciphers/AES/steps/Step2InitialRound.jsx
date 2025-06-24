@@ -1,23 +1,21 @@
+// src/ciphers/AES/steps/Step2InitialRound.jsx
 import React, { useState } from "react";
 import MatrixTable from "../../../components/MatrixTable";
 import { addRoundKey } from "../../../shared/aes/addRoundKey";
 
 const Step2InitialRound = ({ inputMatrix, roundKey0 }) => {
-  const [showExplanation, setShowExplanation] = useState(false);
+  const [hoveredKey, setHoveredKey] = useState(null);
 
   const resultMatrix = addRoundKey(inputMatrix, roundKey0);
-  const highlightMap = {};
   const tooltipMap = {};
 
   inputMatrix.forEach((row, i) => {
     row.forEach((val, j) => {
+      const stateVal = val.toUpperCase();
+      const keyVal = roundKey0[i][j].toUpperCase();
+      const resultVal = resultMatrix[i][j].toUpperCase();
       const key = `${i}-${j}`;
-      const inputVal = val;
-      const keyVal = roundKey0[i][j];
-      const resultVal = resultMatrix[i][j];
-
-      highlightMap[key] = 'result';
-      tooltipMap[key] = `${inputVal.toUpperCase()} ⊕ ${keyVal.toUpperCase()} = ${resultVal.toUpperCase()}`;
+      tooltipMap[key] = `0x${stateVal} ⊕ 0x${keyVal} = 0x${resultVal}`;
     });
   });
 
@@ -36,34 +34,17 @@ const Step2InitialRound = ({ inputMatrix, roundKey0 }) => {
       </div>
 
       <div style={{ marginBottom: "1.5rem" }}>
-        <h4>State After AddRoundKey (Input ⊕ RoundKey[0]):</h4>
+        <h4>State After AddRoundKey:</h4>
         <MatrixTable
           matrix={resultMatrix}
-          highlightMap={highlightMap}
           tooltipMap={tooltipMap}
+          onCellHover={(key) => setHoveredKey(key)}
         />
       </div>
 
-      <label style={{ display: "block", marginBottom: "1rem" }}>
-        <input
-          type="checkbox"
-          checked={showExplanation}
-          onChange={() => setShowExplanation((prev) => !prev)}
-        />{" "}
-        Show Detailed Explanation
-      </label>
-
-      {showExplanation && (
-        <div className="explanation-box">
-          {[0, 1, 2, 3].map((row) =>
-            [0, 1, 2, 3].map((col) => (
-              <div key={`${row}-${col}`}>
-                state[{row}][{col}] = {inputMatrix[row][col].toUpperCase()} ⊕{" "}
-                {roundKey0[row][col].toUpperCase()} ={" "}
-                {resultMatrix[row][col].toUpperCase()}
-              </div>
-            ))
-          )}
+      {hoveredKey && (
+        <div className="explanation-box" style={{ marginTop: '1rem' }}>
+          {tooltipMap[hoveredKey]}
         </div>
       )}
     </div>
