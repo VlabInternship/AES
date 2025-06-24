@@ -23,7 +23,7 @@ const Step3SubBytes = ({ inputMatrix }) => {
 
   return (
     <div>
-      <h3>Step 3: SubBytes</h3>
+      <h3>Step 2: Round 1 - Subbytes </h3>
 
       <div style={{ display: 'flex', gap: '40px', flexWrap: 'wrap' }}>
         <div>

@@ -21,7 +21,7 @@ const Step2InitialRound = ({ inputMatrix, roundKey0 }) => {
 
   return (
     <div>
-      <h3>Step 2: Round 0 — Initial AddRoundKey</h3>
+      <h3>Step 2: Intial Round - AddRoundKey</h3>
 
       <div style={{ marginBottom: "1.5rem" }}>
         <h4>Input State (Before AddRoundKey):</h4>
