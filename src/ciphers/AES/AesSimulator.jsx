@@ -1,5 +1,8 @@
 // src/ciphers/AES/AesSimulator.jsx
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import HintBox from '../../components/HintBox';
+
 import { asciiToHex } from '../../shared/aes/asciiToHex';
 import { toMatrix } from '../../shared/aes/toMatrix';
 import { padInput } from '../../shared/aes/padInput';
@@ -125,39 +128,76 @@ const AesSimulator = () => {
         />
       )}
 
-      {/* Step Rendering */}
-      {step === 0 && inputMatrix.length > 0 && keyMatrix.length > 0 && (
-        <>
-          <Step0InputDisplay inputMatrix={inputMatrix} keyMatrix={keyMatrix} />
-          <button onClick={() => { unlockNextStep(); setStep(1); }} style={{ marginTop: '1rem' }}>Next Step</button>
-        </>
-      )}
+      <AnimatePresence mode="wait">
+        {step === 0 && inputMatrix.length > 0 && keyMatrix.length > 0 && (
+          <motion.div
+            key="step0"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4 }}
+          >
+            <HintBox step={0} />
+            <Step0InputDisplay inputMatrix={inputMatrix} keyMatrix={keyMatrix} />
+            <button onClick={() => { unlockNextStep(); setStep(1); }} style={{ marginTop: '1rem' }}>
+              Next Step
+            </button>
+          </motion.div>
+        )}
 
-      {step === 1 && roundKeys.length > 0 && (
-        <>
-          <Step1KeyExpansion roundKeys={roundKeys} words={words} currentStep={step} />
-          <button onClick={() => { unlockNextStep(); setStep(2); }} style={{ marginTop: '1rem' }}>Next Step</button>
-        </>
-      )}
+        {step === 1 && roundKeys.length > 0 && (
+          <motion.div
+            key="step1"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4 }}
+          >
+            <HintBox step={1} />
+            <Step1KeyExpansion roundKeys={roundKeys} words={words} currentStep={step} />
+            <button onClick={() => { unlockNextStep(); setStep(2); }} style={{ marginTop: '1rem' }}>
+              Next Step
+            </button>
+          </motion.div>
+        )}
 
-      {step === 2 && roundKeys.length > 0 && (
-        <>
-          <Step2InitialRound inputMatrix={inputMatrix} roundKey0={roundKeys[0]} />
-          <button onClick={() => { unlockNextStep(); setStep(3); }} style={{ marginTop: '1rem' }}>Next Step</button>
-        </>
-      )}
+        {step === 2 && roundKeys.length > 0 && (
+          <motion.div
+            key="step2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4 }}
+          >
+            <HintBox step={2} />
+            <Step2InitialRound inputMatrix={inputMatrix} roundKey0={roundKeys[0]} />
+            <button onClick={() => { unlockNextStep(); setStep(3); }} style={{ marginTop: '1rem' }}>
+              Next Step
+            </button>
+          </motion.div>
+        )}
 
-      {step === 3 && (
-        <>
-          <Step3SubBytes inputMatrix={addRoundKey(inputMatrix, roundKeys[0])} />
-          <button onClick={() => { unlockNextStep(); setStep(4); }} style={{ marginTop: '1rem' }}>Next Step</button>
-        </>
-      )}
+        {step === 3 && (
+          <motion.div
+            key="step3"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4 }}
+          >
+            <HintBox step={3} />
+            <Step3SubBytes inputMatrix={addRoundKey(inputMatrix, roundKeys[0])} />
+            <button onClick={() => { unlockNextStep(); setStep(4); }} style={{ marginTop: '1rem' }}>
+              Next Step
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Future: Step 4 to 10 */}
     </div>
   );
-};
+}
+
 
 export default AesSimulator;
 
