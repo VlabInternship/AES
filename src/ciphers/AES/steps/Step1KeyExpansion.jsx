@@ -1,3 +1,4 @@
+// src/ciphers/AES/steps/Step1KeyExpansion.jsx
 import React, { useState, useEffect } from 'react';
 import MatrixTable from '../../../components/MatrixTable';
 import { rotWord, subWord } from '../../../shared/aes/keyExpansion';
@@ -79,8 +80,9 @@ const Step1KeyExpansion = ({ roundKeys, words, currentStep }) => {
                   const wordIminus1 = words[i - 1]?.join(' ')?.toUpperCase();
                   const rot = i >= 4 ? rotWord(words[i - 1]).join(' ').toUpperCase() : '';
                   const sub = i >= 4 ? subWord(rotWord(words[i - 1])).join(' ').toUpperCase() : '';
-                  const rconVal = RCON[i / 4]
-                    ? RCON[i / 4].toString(16).padStart(2, '0').toUpperCase()
+                  const rconIndex = Math.floor(i / 4);
+                  const rconVal = RCON[rconIndex]
+                    ? RCON[rconIndex].toString(16).padStart(2, '0').toUpperCase()
                     : '';
 
                   const isHovered = hoveredIndex === i;
@@ -107,13 +109,13 @@ const Step1KeyExpansion = ({ roundKeys, words, currentStep }) => {
                           <TooltipText tooltip={`[${rot}]`}>
                             RotWord(w[{i - 1}])
                           </TooltipText>{' '}
-                          {'->'}{' '}
+                          {'→'}{' '}
                           <TooltipText tooltip={`[${sub}]`}>
                             SubWord(...)
                           </TooltipText>{' '}
                           ⊕{' '}
                           <TooltipText tooltip={`Rcon Value: ${rconVal}`}>
-                            Rcon[{i / 4}]
+                            Rcon[{rconIndex}]
                           </TooltipText>
                         </div>
                       )}
