@@ -1,4 +1,3 @@
-// src/ciphers/AES/steps/Step1KeyExpansion.jsx
 import React, { useState, useEffect } from 'react';
 import MatrixTable from '../../../components/MatrixTable';
 import { rotWord, subWord } from '../../../shared/aes/keyExpansion';
@@ -25,108 +24,98 @@ const Step1KeyExpansion = ({ roundKeys, words, currentStep }) => {
     <div>
       <h3>Step 1: Key Expansion</h3>
 
-      {roundKeys.map((keyMatrix, round) => {
-        const highlightMap = {};
-        const tooltipMap = {};
+      <div className="step1-grid">
+        {roundKeys.map((keyMatrix, round) => {
+          const highlightMap = {};
+          const tooltipMap = {};
 
-        if (hoveredIndex !== null) {
-          const resultIndex = hoveredIndex;
-          const source1Index = resultIndex >= 4 ? resultIndex - 4 : null;
-          const source2Index = resultIndex >= 4 ? resultIndex - 1 : null;
+          if (hoveredIndex !== null) {
+            const resultIndex = hoveredIndex;
+            const source1Index = resultIndex >= 4 ? resultIndex - 4 : null;
+            const source2Index = resultIndex >= 4 ? resultIndex - 1 : null;
 
-          if (Math.floor(resultIndex / 4) === round) {
-            const col = resultIndex % 4;
-            for (let row = 0; row < 4; row++) {
-              highlightMap[`${row}-${col}`] = 'result';
+            if (Math.floor(resultIndex / 4) === round) {
+              const col = resultIndex % 4;
+              for (let row = 0; row < 4; row++) {
+                highlightMap[`${row}-${col}`] = 'result';
+              }
+            }
+            if (source1Index !== null && Math.floor(source1Index / 4) === round) {
+              const col = source1Index % 4;
+              for (let row = 0; row < 4; row++) {
+                highlightMap[`${row}-${col}`] = 'source';
+              }
+            }
+            if (source2Index !== null && Math.floor(source2Index / 4) === round) {
+              const col = source2Index % 4;
+              for (let row = 0; row < 4; row++) {
+                highlightMap[`${row}-${col}`] = 'source';
+              }
             }
           }
-          if (source1Index !== null && Math.floor(source1Index / 4) === round) {
-            const col = source1Index % 4;
-            for (let row = 0; row < 4; row++) {
-              highlightMap[`${row}-${col}`] = 'source';
-            }
-          }
-          if (source2Index !== null && Math.floor(source2Index / 4) === round) {
-            const col = source2Index % 4;
-            for (let row = 0; row < 4; row++) {
-              highlightMap[`${row}-${col}`] = 'source';
-            }
-          }
-        }
 
-        return (
-          <div key={round} style={{ marginBottom: '1.5rem' }}>
-            <h4
-              style={{ cursor: 'pointer', color: 'var(--primary)' }}
-              onClick={() => toggleRound(round)}
-            >
-              Round {round} Key (Click to {expandedRounds.includes(round) ? 'Collapse' : 'Expand'})
-            </h4>
+          return (
+            <div key={round} className="step1-block">
+              <h4 className="round-toggle" onClick={() => toggleRound(round)}>
+                Round Key {round} (Click to {expandedRounds.includes(round) ? 'Collapse' : 'Expand'})
+              </h4>
 
-            <MatrixTable
-              matrix={keyMatrix}
-              highlightMap={highlightMap}
-              tooltipMap={tooltipMap}
-            />
+              <MatrixTable
+                matrix={keyMatrix}
+                highlightMap={highlightMap}
+                tooltipMap={tooltipMap}
+              />
 
-            {expandedRounds.includes(round) && (
-              <div className="explanation-box">
-                {[0, 1, 2, 3].map((colIdx) => {
-                  const i = round * 4 + colIdx;
-                  if (!words || i >= words.length) return null;
+              {expandedRounds.includes(round) && (
+                <div className="step1-wblock">
+                  {[0, 1, 2, 3].map((colIdx) => {
+                    const i = round * 4 + colIdx;
+                    if (!words || i >= words.length) return null;
 
-                  const wordStr = words[i]?.join(' ')?.toUpperCase();
-                  const wordIminus4 = words[i - 4]?.join(' ')?.toUpperCase();
-                  const wordIminus1 = words[i - 1]?.join(' ')?.toUpperCase();
-                  const rot = i >= 4 ? rotWord(words[i - 1]).join(' ').toUpperCase() : '';
-                  const sub = i >= 4 ? subWord(rotWord(words[i - 1])).join(' ').toUpperCase() : '';
-                  const rconIndex = Math.floor(i / 4);
-                  const rconVal = RCON[rconIndex]
-                    ? RCON[rconIndex].toString(16).padStart(2, '0').toUpperCase()
-                    : '';
+                    const wordStr = words[i]?.join(' ')?.toUpperCase();
+                    const rot = i >= 4 ? rotWord(words[i - 1]).join(' ').toUpperCase() : '';
+                    const sub = i >= 4 ? subWord(rotWord(words[i - 1])).join(' ').toUpperCase() : '';
+                    const rconIndex = Math.floor(i / 4);
+                    const rconVal = RCON[rconIndex]
+                      ? RCON[rconIndex].toString(16).padStart(2, '0').toUpperCase()
+                      : '';
 
-                  const isHovered = hoveredIndex === i;
-
-                  return (
-                    <div
-                      key={i}
-                      onMouseEnter={() => setHoveredIndex(i)}
-                      onMouseLeave={() => setHoveredIndex(null)}
-                      style={{
-                        marginBottom: '0.5rem',
-                        backgroundColor: isHovered ? 'var(--highlight-result)' : 'transparent',
-                        padding: '0.5rem',
-                        borderRadius: '6px',
-                      }}
-                    >
-                      {i < 4 ? (
-                        <div>
-                          w[{i}] = [{wordStr}] ← <strong>Original Key Word</strong>
-                        </div>
-                      ) : (
-                        <div>
-                          w[{i}] = [{wordStr}] = w[{i - 4}] ⊕{' '}
-                          <TooltipText tooltip={`[${rot}]`}>
-                            RotWord(w[{i - 1}])
-                          </TooltipText>{' '}
-                          {'→'}{' '}
-                          <TooltipText tooltip={`[${sub}]`}>
-                            SubWord(...)
-                          </TooltipText>{' '}
-                          ⊕{' '}
-                          <TooltipText tooltip={`Rcon Value: ${rconVal}`}>
-                            Rcon[{rconIndex}]
-                          </TooltipText>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        );
-      })}
+                    return (
+                      <div
+                        key={i}
+                        className="word-line"
+                        onMouseEnter={() => setHoveredIndex(i)}
+                        onMouseLeave={() => setHoveredIndex(null)}
+                      >
+                        {i < 4 ? (
+                          <div>
+                            w[{i}] = [{wordStr}] ← Original Key Word
+                          </div>
+                        ) : (
+                          <div>
+                            w[{i}] = [{wordStr}] = w[{i - 4}] ⊕{' '}
+                            <TooltipText tooltip={`[${rot}]`}>
+                              RotWord(w[{i - 1}])
+                            </TooltipText>{' '}
+                            →{' '}
+                            <TooltipText tooltip={`[${sub}]`}>
+                              SubWord(...)
+                            </TooltipText>{' '}
+                            ⊕{' '}
+                            <TooltipText tooltip={`Rcon Value: ${rconVal}`}>
+                              Rcon[{rconIndex}]
+                            </TooltipText>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 // src/App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './styles/global.css';
 import AesSimulator from './ciphers/AES/AesSimulator';
 import CipherSelector from './components/CipherSelector';
 

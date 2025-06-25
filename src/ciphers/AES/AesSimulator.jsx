@@ -1,5 +1,6 @@
 // src/ciphers/AES/AesSimulator.jsx
 import React, { useState } from 'react';
+import '../../styles/aes.css';
 import { asciiToHex } from '../../shared/aes/asciiToHex';
 import { toMatrix } from '../../shared/aes/toMatrix';
 import { padInput } from '../../shared/aes/padInput';
@@ -82,56 +83,68 @@ const AesSimulator = () => {
     }
   };
 
-const round0Output =
-  inputMatrix.length === 4 && roundKeys[0]?.length === 4
-    ? addRoundKey(inputMatrix, roundKeys[0])
-    : [];
+  const round0Output =
+    inputMatrix.length === 4 && roundKeys[0]?.length === 4
+      ? addRoundKey(inputMatrix, roundKeys[0])
+      : [];
 
-const subBytesOutput =
-  round0Output.length === 4 ? subBytes(round0Output) : [];
+  const subBytesOutput =
+    round0Output.length === 4 ? subBytes(round0Output) : [];
 
-const shiftRowsOutput =
-  subBytesOutput.length === 4 ? shiftRows(subBytesOutput) : [];
+  const shiftRowsOutput =
+    subBytesOutput.length === 4 ? shiftRows(subBytesOutput) : [];
 
   return (
-    <div>
-      <h2>AES Encryption</h2>
+    <div className="aes-container">
+      <h2 style={{ textAlign: 'center' }}>
+        AES Encryption
+      </h2>
 
-      <form>
-        <div style={{ marginBottom: '10px' }}>
-          <label><strong>Plaintext (16 characters):</strong></label><br />
-          <input
-            type="text"
-            value={plainText}
-            placeholder="e.g., Thats my Kung Fu"
-            onChange={(e) => setPlainText(e.target.value)}
-            maxLength={16}
-          />
+      <form onSubmit={handleConvert}>
+        <div className="form-grid">
+          <div className="form-left">
+            <div>
+              <label>Plaintext</label>
+              <input
+                type="text"
+                value={plainText}
+                placeholder="e.g., Thats my Kung Fu"
+                onChange={(e) => setPlainText(e.target.value)}
+                maxLength={16}
+              />
+            </div>
+            <div>
+              <label>Key</label>
+              <input
+                type="text"
+                value={keyText}
+                placeholder="e.g., Two One Nine Two"
+                onChange={(e) => setKeyText(e.target.value)}
+                maxLength={16}
+              />
+            </div>
+          </div>
+
+          <div className="form-right">
+            <div>
+              <label>Input HEX</label>
+              <div className="hex-output">
+                {inputHex.join(' ').toUpperCase()}
+              </div>
+            </div>
+            <div>
+              <label>Key HEX</label>
+              <div className="hex-output">
+                {keyHex.join(' ').toUpperCase()}
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div style={{ marginBottom: '10px' }}>
-          <label><strong>Key (16 characters):</strong></label><br />
-          <input
-            type="text"
-            value={keyText}
-            placeholder="e.g., Two One Nine Two"
-            onChange={(e) => setKeyText(e.target.value)}
-            maxLength={16}
-          />
+        <div className="aes-button-row">
+          <button type="submit">Start</button>
+          <button type="button" onClick={handleReset}>Reset</button>
         </div>
-
-        <button onClick={handleConvert}>Start</button>
-        <button onClick={handleReset} style={{ marginLeft: '10px' }}>Reset</button>
-
-        {inputHex.length > 0 && (
-          <>
-            <h4>Input HEX:</h4>
-            <p>{inputHex.join(' ').toUpperCase()}</p>
-
-            <h4>Key HEX:</h4>
-            <p>{keyHex.join(' ').toUpperCase()}</p>
-          </>
-        )}
       </form>
 
       {step >= 0 && (

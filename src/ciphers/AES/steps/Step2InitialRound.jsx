@@ -5,7 +5,6 @@ import { addRoundKey } from "../../../shared/aes/addRoundKey";
 
 const Step2InitialRound = ({ inputMatrix, roundKey0 }) => {
   const [hoveredKey, setHoveredKey] = useState(null);
-
   const resultMatrix = addRoundKey(inputMatrix, roundKey0);
   const tooltipMap = {};
 
@@ -22,31 +21,35 @@ const Step2InitialRound = ({ inputMatrix, roundKey0 }) => {
   return (
     <div>
       <h3>Step 2: Intial Round - AddRoundKey</h3>
-
-      <div style={{ marginBottom: "1.5rem" }}>
-        <h4>Input State (Before AddRoundKey):</h4>
-        <MatrixTable matrix={inputMatrix} />
-      </div>
-
-      <div style={{ marginBottom: "1.5rem" }}>
-        <h4>Round Key [0]:</h4>
-        <MatrixTable matrix={roundKey0} />
-      </div>
-
-      <div style={{ marginBottom: "1.5rem" }}>
-        <h4>State After AddRoundKey:</h4>
-        <MatrixTable
-          matrix={resultMatrix}
-          tooltipMap={tooltipMap}
-          onCellHover={(key) => setHoveredKey(key)}
-        />
-      </div>
-
-      {hoveredKey && (
-        <div className="explanation-box" style={{ marginTop: '1rem' }}>
-          {tooltipMap[hoveredKey]}
+      <div className="step2-layout">
+        <div className="step2-top-row">
+          <div>
+            <h4>Input State (Before):</h4>
+            <MatrixTable matrix={inputMatrix} />
+          </div>
+          <div>
+            <h4>RoundKey [0]:</h4>
+            <MatrixTable matrix={roundKey0} />
+          </div>
         </div>
-      )}
+
+        <div className="step2-center">
+          <div className="xor-circle">⊕</div>
+        </div>
+
+        <div className="step2-bottom">
+          <h4>State After AddRoundKey (Input ⊕ RoundKey[0]):</h4>
+          <MatrixTable matrix={resultMatrix} tooltipMap={tooltipMap} onCellHover={(k) => setHoveredKey(k)} />
+        </div>
+
+        {hoveredKey && (
+          <div className="explanation-box">
+            {tooltipMap[hoveredKey]}
+          </div>
+        )}
+      </div>
+
+
     </div>
   );
 };
