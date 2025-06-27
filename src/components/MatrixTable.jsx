@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const MatrixTable = ({ matrix, highlightMap = {}, tooltipMap = {}, onCellHover = () => {} }) => (
+const MatrixTable = ({ matrix, highlightMap = {}, tooltipMap = {}, onCellHover = () => { } }) => (
   <table border="1" cellPadding="10">
     <tbody>
       {matrix.map((row, i) => (
@@ -13,8 +13,8 @@ const MatrixTable = ({ matrix, highlightMap = {}, tooltipMap = {}, onCellHover =
               highlightMap[key] === 'result'
                 ? '#c1f0c1'
                 : highlightMap[key] === 'source'
-                ? '#ffeeba'
-                : 'white';
+                  ? '#ffeeba'
+                  : 'white';
 
             return (
               <td
@@ -31,7 +31,13 @@ const MatrixTable = ({ matrix, highlightMap = {}, tooltipMap = {}, onCellHover =
                 onMouseLeave={() => onCellHover(null)}
               >
                 {cell.toUpperCase()}
+                {tooltipMap[key] && (
+                  <div className="tooltip-box">
+                    {tooltipMap[key]}
+                  </div>
+                )}
               </td>
+
             );
           })}
         </tr>
