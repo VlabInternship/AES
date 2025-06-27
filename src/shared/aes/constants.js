@@ -21,6 +21,15 @@ export const SBOX = [
   0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16
 ];
 
+export const SBOX_INDEXED = Array.from({ length: 17 }, (_, row) =>
+  Array.from({ length: 17 }, (_, col) => {
+    if (row === 0 && col === 0) return '';             // top-left cell
+    if (row === 0) return (col - 1).toString(16).toUpperCase(); // column headers
+    if (col === 0) return (row - 1).toString(16).toUpperCase(); // row headers
+    const index = (row - 1) * 16 + (col - 1);
+    return SBOX[index].toString(16).toUpperCase().padStart(2, '0');
+  })
+);
 // AES Rcon values for key expansion
 export const RCON = [
   0x00, 0x01, 0x02, 0x04, 0x08,
