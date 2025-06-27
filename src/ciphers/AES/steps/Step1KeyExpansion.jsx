@@ -1,8 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import MatrixTable from '../../../components/MatrixTable';
-import { rotWord, subWord } from '../../../shared/aes/keyExpansion';
-import { RCON } from '../../../shared/aes/constants';
 import TooltipText from '../../../components/TooltipText';
+import { rotWord, subWord } from '../../../shared/aes/keyExpansion';
+import { RCON, SBOX } from '../../../shared/aes/constants';
+import { motion } from 'framer-motion';
+
+const WordExpansionBlock = ({ i, words }) => {
+  const wPrev = words[i - 1];
+  const wPrev4 = words[i - 4];
+  const rotated = rotWord(wPrev);
+  const subbed = rotated.map(b => {
+    const val = parseInt(b, 16);
+    return SBOX[val]?.toString(16).toUpperCase().padStart(2, '0');
+  });
+  const rconVal = RCON[Math.floor(i / 4)].toString(16).toUpperCase().padStart(2, '0');
+  const wCurrent = words[i]?.join(' ').toUpperCase();
+
+  return (
+    <motion.div className="expansion-diagram" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+      <div className="step-block">w[{i - 1}]<br /><span>[{wPrev.join(' ').toUpperCase()}]</span></div>
+      <div className="arrow">→</div>
+
+      <div className="step-block">RotWord<br /><span>[{rotated.join(' ').toUpperCase()}]</span></div>
+      <div className="arrow">→</div>
+
+      <div className="step-block">
+        SubWord<br />
+        <span>
+          [{rotated.map((b, idx) => {
+            const val = parseInt(b, 16);
+            const subVal = SBOX[val]?.toString(16).toUpperCase().padStart(2, '0');
+            return (
+              <TooltipText key={idx} tooltip={`S-Box[0x${b.toUpperCase()}] = 0x${subVal}`}>
+                {subVal}{idx < 3 ? ' ' : ''}
+              </TooltipText>
+            );
+          })}]
+        </span>
+      </div>
+
+      <div className="arrow">⊕</div>
+
+      <div className="step-block">Rcon<br /><span>[{rconVal} 00 00 00]</span></div>
+      <div className="arrow">⊕</div>
+
+      <div className="step-block">w[{i - 4}]<br /><span>[{wPrev4.join(' ').toUpperCase()}]</span></div>
+      <div className="arrow">=</div>
+
+      <div className="step-block result">w[{i}]<br /><span className="final-result">[{wCurrent}]</span></div>
+    </motion.div>
+  );
+};
 
 const Step1KeyExpansion = ({ roundKeys, words, currentStep }) => {
   const [expandedRounds, setExpandedRounds] = useState([]);
@@ -60,11 +108,7 @@ const Step1KeyExpansion = ({ roundKeys, words, currentStep }) => {
                 Round Key {round} (Click to {expandedRounds.includes(round) ? 'Collapse' : 'Expand'})
               </h4>
 
-              <MatrixTable
-                matrix={keyMatrix}
-                highlightMap={highlightMap}
-                tooltipMap={tooltipMap}
-              />
+              <MatrixTable matrix={keyMatrix} highlightMap={highlightMap} tooltipMap={tooltipMap} />
 
               {expandedRounds.includes(round) && (
                 <div className="step1-wblock">
@@ -72,41 +116,17 @@ const Step1KeyExpansion = ({ roundKeys, words, currentStep }) => {
                     const i = round * 4 + colIdx;
                     if (!words || i >= words.length) return null;
 
-                    const wordStr = words[i]?.join(' ')?.toUpperCase();
-                    const rot = i >= 4 ? rotWord(words[i - 1]).join(' ').toUpperCase() : '';
-                    const sub = i >= 4 ? subWord(rotWord(words[i - 1])).join(' ').toUpperCase() : '';
-                    const rconIndex = Math.floor(i / 4);
-                    const rconVal = RCON[rconIndex]
-                      ? RCON[rconIndex].toString(16).padStart(2, '0').toUpperCase()
-                      : '';
+                    if (i < 4) {
+                      return (
+                        <div key={i} className="word-line">
+                          w[{i}] = [{words[i].join(' ').toUpperCase()}] ← Original Key Word
+                        </div>
+                      );
+                    }
 
                     return (
-                      <div
-                        key={i}
-                        className="word-line"
-                        onMouseEnter={() => setHoveredIndex(i)}
-                        onMouseLeave={() => setHoveredIndex(null)}
-                      >
-                        {i < 4 ? (
-                          <div>
-                            w[{i}] = [{wordStr}] ← Original Key Word
-                          </div>
-                        ) : (
-                          <div>
-                            w[{i}] = [{wordStr}] = w[{i - 4}] ⊕{' '}
-                            <TooltipText tooltip={`[${rot}]`}>
-                              RotWord(w[{i - 1}])
-                            </TooltipText>{' '}
-                            →{' '}
-                            <TooltipText tooltip={`[${sub}]`}>
-                              SubWord(...)
-                            </TooltipText>{' '}
-                            ⊕{' '}
-                            <TooltipText tooltip={`Rcon Value: ${rconVal}`}>
-                              Rcon[{rconIndex}]
-                            </TooltipText>
-                          </div>
-                        )}
+                      <div key={i}>
+                        <WordExpansionBlock i={i} words={words} />
                       </div>
                     );
                   })}

@@ -3,7 +3,7 @@ import React from 'react';
 
 const StepNavigator = ({ currentStep, totalSteps, onStepChange }) => {
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', margin: '20px 0' }}>
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', margin: '20px 0', justifyContent: 'center' }}>
       {[...Array(totalSteps).keys()].map(step => (
         <button
           key={step}
