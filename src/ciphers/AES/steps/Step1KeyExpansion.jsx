@@ -17,37 +17,41 @@ const WordExpansionBlock = ({ i, words }) => {
   const wCurrent = words[i]?.join(' ').toUpperCase();
 
   return (
-    <motion.div className="expansion-diagram" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
-      <div className="step-block">w[{i - 1}]<br /><span>[{wPrev.join(' ').toUpperCase()}]</span></div>
-      <div className="arrow">→</div>
-
-      <div className="step-block">RotWord<br /><span>[{rotated.join(' ').toUpperCase()}]</span></div>
+    <motion.div className="expansion-diagram" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+      <div className="step-block">
+        <TooltipText tooltip="Last word from previous group of 4">w[{i - 1}]</TooltipText>
+        <span>[{wPrev.join(' ').toUpperCase()}]</span>
+      </div>
       <div className="arrow">→</div>
 
       <div className="step-block">
-        SubWord<br />
-        <span>
-          [{rotated.map((b, idx) => {
-            const val = parseInt(b, 16);
-            const subVal = SBOX[val]?.toString(16).toUpperCase().padStart(2, '0');
-            return (
-              <TooltipText key={idx} tooltip={`S-Box[0x${b.toUpperCase()}] = 0x${subVal}`}>
-                {subVal}{idx < 3 ? ' ' : ''}
-              </TooltipText>
-            );
-          })}]
-        </span>
+        <TooltipText tooltip="Rotate bytes left">RotWord</TooltipText>
+        <span>[{rotated.join(' ').toUpperCase()}]</span>
       </div>
+      <div className="arrow">→</div>
 
+      <div className="step-block">
+        <TooltipText tooltip="Each byte is substituted using S-Box">SubWord</TooltipText>
+        <span>[{subbed.join(' ')}]</span>
+      </div>
       <div className="arrow">⊕</div>
 
-      <div className="step-block">Rcon<br /><span>[{rconVal} 00 00 00]</span></div>
+      <div className="step-block">
+        <TooltipText tooltip="Round constant for this iteration">RCON</TooltipText>
+        <span>[{rconVal} 00 00 00]</span>
+      </div>
       <div className="arrow">⊕</div>
 
-      <div className="step-block">w[{i - 4}]<br /><span>[{wPrev4.join(' ').toUpperCase()}]</span></div>
+      <div className="step-block">
+        <TooltipText tooltip="Word from 4 steps back (w[i-4])">w[{i - 4}]</TooltipText>
+        <span>[{wPrev4.join(' ').toUpperCase()}]</span>
+      </div>
       <div className="arrow">=</div>
 
-      <div className="step-block result">w[{i}]<br /><span className="final-result">[{wCurrent}]</span></div>
+      <div className="step-block result">
+        <TooltipText tooltip="Final derived word after all XORs">w[{i}]</TooltipText>
+        <span className="final-result">[{wCurrent}]</span>
+      </div>
     </motion.div>
   );
 };
