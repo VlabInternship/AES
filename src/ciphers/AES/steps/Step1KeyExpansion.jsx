@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react';
 import MatrixTable from '../../../components/MatrixTable';
 import TooltipText from '../../../components/TooltipText';
 import { rotWord, subWord } from '../../../shared/aes/keyExpansion';
-import { RCON,SBOX_INDEXED } from '../../../shared/aes/constants';
+import { RCON, SBOX_INDEXED } from '../../../shared/aes/constants';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const SBoxModal = ({ word, substituted, onClose }) => {
+  const usedSubValues = new Set(
+    substituted.map(b => b.toUpperCase())
+  );
+
   return (
     <AnimatePresence>
       <motion.div
@@ -24,24 +28,28 @@ const SBoxModal = ({ word, substituted, onClose }) => {
           <h3>S-Box Substitution</h3>
           <p><strong>Input Word:</strong> {word.map(b => b.toUpperCase()).join(' ')}</p>
           <p><strong>After S-Box:</strong> {substituted.map(b => b.toUpperCase()).join(' ')}</p>
-          <p><strong>Left Byte for Row Right Byte for Column</strong></p>
+          <p className='explanation-box'><strong>The high nibble of the byte selects the row and the low nibble selects the column in the S-Box table.</strong></p>
+
+          <p className="sbox-subtitle">
+            <span style={{ backgroundColor: '#fff3a3', padding: '2px 6px', border: '1px solid #ccc', marginRight: '8px' }}>Yellow</span>
+            = Substituted Values
+          </p>
 
           <table className="sbox-table">
             <tbody>
               {SBOX_INDEXED.map((rowArr, i) => (
                 <tr key={i}>
                   {rowArr.map((cell, j) => {
-                    const val = cell;
+                    const val = cell.toUpperCase();
                     const isHeader = i === 0 || j === 0;
-
-                    const isMatch = !isHeader && substituted.some(b => b.toUpperCase() === val);
+                    const isUsed = !isHeader && usedSubValues.has(val);
 
                     return (
                       <td
                         key={j}
                         style={{
-                          backgroundColor: isMatch ? '#c1f0c1' : isHeader ? '#eee' : 'white',
-                          fontWeight: isMatch ? 'bold' : 'normal',
+                          backgroundColor: isUsed ? '#fff3a3' : isHeader ? '#eee' : 'white',
+                          fontWeight: isUsed ? 'bold' : 'normal',
                           textAlign: 'center',
                           padding: '6px',
                           border: '1px solid #ccc',
@@ -49,7 +57,7 @@ const SBoxModal = ({ word, substituted, onClose }) => {
                           fontFamily: 'monospace'
                         }}
                       >
-                        {val}
+                        {cell}
                       </td>
                     );
                   })}
@@ -64,6 +72,7 @@ const SBoxModal = ({ word, substituted, onClose }) => {
     </AnimatePresence>
   );
 };
+
 
 const RconModal = ({ rcon, onClose }) => {
   return (
@@ -83,7 +92,7 @@ const RconModal = ({ rcon, onClose }) => {
         >
           <h3>RCON Value</h3>
           <p><strong>RCON:</strong> {rcon.join(' ').toUpperCase()}</p>
-          <p>This value is used in the key expansion process to derive new round keys.</p>
+          <p className='explanation-box'><strong>This value is used in the key expansion process to derive new round keys</strong></p>
           <h4 style={{ marginTop: '1rem' }}>All RCON Values (Hex)</h4>
           <table className="rcon-table">
             <thead>
@@ -106,7 +115,7 @@ const RconModal = ({ rcon, onClose }) => {
       </motion.div>
     </AnimatePresence>
   );
-};    
+};
 
 const WordExpansionBlock = ({ i, words }) => {
   const [showModal, setShowModal] = useState(false);
@@ -124,17 +133,17 @@ const WordExpansionBlock = ({ i, words }) => {
   const wCurrent = words[i]?.join(' ').toUpperCase();
   const rot = rotWord(wPrev);
   const handleSubwordClick = () => {
-  const sub = subWord(rot);
-  setWord(rot);
-  setSubstituted(sub);
-  setModalType('sbox');
-};
+    const sub = subWord(rot);
+    setWord(rot);
+    setSubstituted(sub);
+    setModalType('sbox');
+  };
 
-const handleRconClick = () => {
-  setWord([rcon.toString(16).padStart(2, '0')]); // convert number to hex
-  setSubstituted([]);
-  setModalType('rcon');
-};
+  const handleRconClick = () => {
+    setWord([rcon.toString(16).padStart(2, '0')]); // convert number to hex
+    setSubstituted([]);
+    setModalType('rcon');
+  };
 
 
   return (
@@ -160,7 +169,7 @@ const handleRconClick = () => {
             >
               Subword
             </span>
-            
+
           </TooltipText>
           <span>[{subWordVal}]</span>
 
@@ -197,19 +206,19 @@ const handleRconClick = () => {
 
       {/* ✅ INSERT THIS JUST BELOW motion.div */}
       {modalType === 'sbox' && (
-  <SBoxModal
-    word={word}
-    substituted={substituted}
-    onClose={() => setModalType(null)}
-  />
-)}
+        <SBoxModal
+          word={word}
+          substituted={substituted}
+          onClose={() => setModalType(null)}
+        />
+      )}
 
-{modalType === 'rcon' && (
-  <RconModal
-    rcon={word}
-    onClose={() => setModalType(null)}
-  />
-)}
+      {modalType === 'rcon' && (
+        <RconModal
+          rcon={word}
+          onClose={() => setModalType(null)}
+        />
+      )}
 
     </>
   );
@@ -275,30 +284,32 @@ const Step1KeyExpansion = ({ roundKeys, words, currentStep }) => {
 
               {expandedRounds.includes(round) && (
                 <div className="step1-wblock">
+                  {round === 0 && (
+  <p className='explanation-box'><strong>Original Key given by User is used as Round0 Key.</strong></p>
+)}
+
                   {[0, 1, 2, 3].map((colIdx) => {
                     const i = round * 4 + colIdx;
+
                     if (!words || i >= words.length) return null;
 
                     if (i < 4) {
                       return (
                         <div>
-                        <div key={i} className="expansion-diagram">
-          
-          <div className='step-block'>
-            w[{i}]
-        
-            </div>
-            <div className='arrow'>=</div>
-                      <div className='step-block result'> 
-                        <TooltipText tooltip="Original Key Word">
-                          <span className='final-result'> [{words[i].join(' ').toUpperCase()}]</span>
-          </TooltipText>
-                        
-                        </div> 
+                          <div key={i} className="expansion-diagram">
+                            <div className='step-block'>
+                              <span>w[{i}]</span>
+                            </div>
+                            <div className='arrow'>=</div>
+                            <div className='step-block result'>
+                              <TooltipText tooltip="Original Key Word">
+                                <span className='final-result'> [{words[i].join(' ').toUpperCase()}]</span>
+                              </TooltipText>
+                            </div>
 
 
-                        
-                        </div>
+
+                          </div>
                         </div>
                       );
                     }
