@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import MatrixTable from '../../../components/MatrixTable';
 import TooltipText from '../../../components/TooltipText';
 import { rotWord, subWord } from '../../../shared/aes/keyExpansion';
-import { RCON, SBOX, SBOX_INDEXED } from '../../../shared/aes/constants';
+import { RCON,SBOX_INDEXED } from '../../../shared/aes/constants';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const SBoxModal = ({ word, substituted, onClose }) => {
@@ -72,6 +72,7 @@ const WordExpansionBlock = ({ i, words }) => {
 
   const wPrev = words[i - 1];
   const wPrev4 = words[i - 4];
+  const subWordVal = subWord(rotWord(wPrev)).map(b => b.toString(16).toUpperCase().padStart(2, '0')).join(' ');
   const rconVal = RCON[Math.floor(i / 4)].toString(16).toUpperCase().padStart(2, '0');
   const wCurrent = words[i]?.join(' ').toUpperCase();
   const rot = rotWord(wPrev);
@@ -106,7 +107,9 @@ const WordExpansionBlock = ({ i, words }) => {
             >
               Subword
             </span>
+            
           </TooltipText>
+          <span>[{subWordVal}]</span>
 
         </div>
         <div className="arrow">⊕</div>
