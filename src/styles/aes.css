@@ -154,20 +154,18 @@ td[data-highlight="source"] {
 
 .tooltip-box {
   position: absolute;
-  top: 100%;
+  top: 120%;
   left: 0;
-  background: var(--tooltip-bg, #333);
-  color: var(--tooltip-text, #fff);
+  background: #333;
+  color: white;
   padding: 6px 10px;
   border-radius: 4px;
   font-size: 12px;
-  white-space: pre-line;
-  z-index: 10;
+  z-index: 20;
   max-width: 260px;
-  word-break: break-word;
-  pointer-events: none;
+  white-space: pre-line;
+  pointer-events: auto;  /* ← allow interactivity */
 }
-
 
 .explanation-box {
   font-family: var(--font-mono);
