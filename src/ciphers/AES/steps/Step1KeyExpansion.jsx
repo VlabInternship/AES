@@ -65,24 +65,77 @@ const SBoxModal = ({ word, substituted, onClose }) => {
   );
 };
 
+const RconModal = ({ rcon, onClose }) => {
+  return (
+    <AnimatePresence>
+      <motion.div
+        className="modal-overlay"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
+        <motion.div
+          className="modal-content"
+          initial={{ y: 60, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 60, opacity: 0 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+        >
+          <h3>RCON Value</h3>
+          <p><strong>RCON:</strong> {rcon.join(' ').toUpperCase()}</p>
+          <p>This value is used in the key expansion process to derive new round keys.</p>
+          <h4 style={{ marginTop: '1rem' }}>All RCON Values (Hex)</h4>
+          <table className="rcon-table">
+            <thead>
+              <tr>
+                <th>Index</th>
+                <th>RCON</th>
+              </tr>
+            </thead>
+            <tbody>
+              {RCON.map((val, idx) => (
+                <tr key={idx}>
+                  <td style={{ textAlign: 'center' }}>RCON[{idx}]</td>
+                  <td><code>{val.toString(16).toUpperCase().padStart(2, '0')} 00 00 00</code></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button onClick={onClose} style={{ marginTop: '1rem' }}>Close</button>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};    
+
 const WordExpansionBlock = ({ i, words }) => {
   const [showModal, setShowModal] = useState(false);
   const [word, setWord] = useState([]);
   const [substituted, setSubstituted] = useState([]);
+  const [modalType, setModalType] = useState(null); // 'sbox' or 'rcon'
+  const rcon = RCON[Math.floor(i / 4)];
 
   const wPrev = words[i - 1];
   const wPrev4 = words[i - 4];
+  if (!wPrev || !wPrev4) return null; // Ensure previous words exist
+
   const subWordVal = subWord(rotWord(wPrev)).map(b => b.toString(16).toUpperCase().padStart(2, '0')).join(' ');
   const rconVal = RCON[Math.floor(i / 4)].toString(16).toUpperCase().padStart(2, '0');
   const wCurrent = words[i]?.join(' ').toUpperCase();
   const rot = rotWord(wPrev);
   const handleSubwordClick = () => {
-    <TooltipText tooltip="Each byte is substituted using S-Box">SubWord</TooltipText>
-    const sub = subWord(rot);
-    setWord(rot);
-    setSubstituted(sub);
-    setShowModal(true);
-  };
+  const sub = subWord(rot);
+  setWord(rot);
+  setSubstituted(sub);
+  setModalType('sbox');
+};
+
+const handleRconClick = () => {
+  setWord([rcon.toString(16).padStart(2, '0')]); // convert number to hex
+  setSubstituted([]);
+  setModalType('rcon');
+};
+
 
   return (
     <>
@@ -115,7 +168,15 @@ const WordExpansionBlock = ({ i, words }) => {
         <div className="arrow">⊕</div>
 
         <div className="step-block">
-          <TooltipText tooltip="Round constant for this iteration">RCON</TooltipText>
+          <TooltipText tooltip="Round constant for this iteration">
+            <span
+              onClick={handleRconClick}
+              style={{ textDecoration: 'underline dotted', color: '#0070f3', cursor: 'pointer' }}
+            >
+              RCON[{Math.floor(i / 4)}]
+            </span>
+
+          </TooltipText>
           <span>[{rconVal} 00 00 00]</span>
         </div>
         <div className="arrow">⊕</div>
@@ -135,13 +196,21 @@ const WordExpansionBlock = ({ i, words }) => {
       {/* rest of blocks: ⊕ RCON, w[i-4], result */}
 
       {/* ✅ INSERT THIS JUST BELOW motion.div */}
-      {showModal && (
-        <SBoxModal
-          word={word}
-          substituted={substituted}
-          onClose={() => setShowModal(false)}
-        />
-      )}
+      {modalType === 'sbox' && (
+  <SBoxModal
+    word={word}
+    substituted={substituted}
+    onClose={() => setModalType(null)}
+  />
+)}
+
+{modalType === 'rcon' && (
+  <RconModal
+    rcon={word}
+    onClose={() => setModalType(null)}
+  />
+)}
+
     </>
   );
 

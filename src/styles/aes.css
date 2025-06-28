@@ -301,6 +301,21 @@ section {
   color: var(--primary-dark);
 }
 
+.rcon-table {
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+  width: 100%;
+  font-family: monospace;
+  font-size: 13px;
+}
+
+.rcon-table th,
+.rcon-table td {
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+}
+
+
 .result {
   background: var(--highlight-result);
 }
