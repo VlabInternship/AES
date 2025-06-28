@@ -98,19 +98,20 @@ button:hover {
 }
 
 /*Step 0 */
-.input-row {
+.step0-grid {
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.hex-row {
-  display: flex;
-  justify-content: center;
-  gap: 4rem;
+  flex-direction: column;
+  gap: 2rem;
   margin-top: 1.5rem;
+  padding: 1rem;
+}
+.step0-box {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
   text-align: center;
+  margin-bottom: 2rem  ;
 }
 
 /*step navigator*/
@@ -165,6 +166,14 @@ td[data-highlight="source"] {
   max-width: 260px;
   white-space: pre-line;
   pointer-events: auto;  /* ← allow interactivity */
+}
+
+title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+  text-align: 'center'
 }
 
 .explanation-box {
@@ -382,6 +391,104 @@ section {
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease;
 }
+/*Step 4 ShiftRows */
+.step4-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  padding: 1rem;
+}
+
+.step4-row {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.step4-row h4 {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.step4-row table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  font-family: var(--font-mono);
+  background-color: var(--background-light);
+  min-width: 40px;
+  text-align: center;
+}
+
+.step4-row .arrow {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--primary-dark);
+}
+
+.motion-table td {
+  overflow: visible;
+}
+.step4-box {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+/*step 5 MixColumns */
+/* step5MixColumns.css */
+
+.step5-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  padding: 1rem;
+}
+
+.step5-box {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+  text-align: center;
+
+}
+.step5-diagram-wrapper {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  background-color: #f5f9ff;
+  border-left: 4px solid var(--primary);
+  border-radius: 8px;
+}
+
+.step5-diagram-label {
+  font-weight: bold;
+  color: var(--primary-dark);
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.step5-diagram-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-family: monospace;
+  text-align: left;
+}
+
+.step5-diagram-symbol {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
 
 @media (max-width: 600px) {
   .input-row {

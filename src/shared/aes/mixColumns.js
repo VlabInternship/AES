@@ -1,5 +1,4 @@
 //mixColumns.js
-
 // Helper for GF(2^8) multiplication
 function gmul(a, b) {
   let p = 0;
@@ -12,21 +11,37 @@ function gmul(a, b) {
   }
   return p;
 }
+function generateMixMatrix() {
+  const base = [0x02, 0x01, 0x01, 0x03];
+  const matrix = [];
+  for (let i = 0; i < 4; i++) {
+    const rotated = base.slice(-i).concat(base.slice(0, -i));
+    matrix.push(rotated);
+  }
+  // Transpose to get correct layout
+  return matrix[0].map((_, colIndex) => matrix.map(row => row[colIndex]));
+}
 
-export function mixColumns(state) {
+export function mixColumns(state,matrix = generateMixMatrix()) {
   const newState = [[], [], [], []];
 
   for (let col = 0; col < 4; col++) {
-    const a0 = parseInt(state[0][col], 16);
-    const a1 = parseInt(state[1][col], 16);
-    const a2 = parseInt(state[2][col], 16);
-    const a3 = parseInt(state[3][col], 16);
+    const a = [
+      parseInt(state[0][col], 16),
+      parseInt(state[1][col], 16),
+      parseInt(state[2][col], 16),
+      parseInt(state[3][col], 16),
+    ];
 
-    newState[0][col] = (gmul(a0, 2) ^ gmul(a1, 3) ^ a2 ^ a3).toString(16).padStart(2, '0');
-    newState[1][col] = (a0 ^ gmul(a1, 2) ^ gmul(a2, 3) ^ a3).toString(16).padStart(2, '0');
-    newState[2][col] = (a0 ^ a1 ^ gmul(a2, 2) ^ gmul(a3, 3)).toString(16).padStart(2, '0');
-    newState[3][col] = (gmul(a0, 3) ^ a1 ^ a2 ^ gmul(a3, 2)).toString(16).padStart(2, '0');
+    for (let row = 0; row < 4; row++) {
+      let value = 0;
+      for (let k = 0; k < 4; k++) {
+        value ^= gmul(matrix[row][k], a[k]);
+      }
+      newState[row][col] = value.toString(16).padStart(2, '0');
+    }
   }
 
   return newState;
 }
+export { generateMixMatrix };

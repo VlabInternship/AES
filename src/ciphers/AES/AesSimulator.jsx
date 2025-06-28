@@ -8,12 +8,14 @@ import { expandKey } from '../../shared/aes/keyExpansion';
 import { addRoundKey } from '../../shared/aes/addRoundKey';
 import { subBytes } from '../../shared/aes/subBytes';
 import { shiftRows } from '../../shared/aes/shiftRows';
+import { mixColumns } from '../../shared/aes/mixColumns';
 
 import Step0InputDisplay from './steps/Step0InputDisplay';
 import Step1KeyExpansion from './steps/Step1KeyExpansion';
 import Step2InitialRound from './steps/Step2InitialRound';
 import Step3SubBytes from './steps/Step3SubBytes';
 import Step4ShiftRows from './steps/Step4ShiftRows';
+import Step5MixColumns from './steps/Step5MixColumns';
 
 import StepNavigator from '../../components/StepNavigator';
 import HintBox from '../../components/HintBox';
@@ -93,6 +95,10 @@ const AesSimulator = () => {
 
   const shiftRowsOutput =
     subBytesOutput.length === 4 ? shiftRows(subBytesOutput) : [];
+
+  const mixColumnsOutput =
+    shiftRowsOutput.length === 4 ? mixColumns(shiftRowsOutput) : [];
+
 
   return (
     <div className="aes-container">
@@ -196,6 +202,14 @@ const AesSimulator = () => {
             <button onClick={() => { unlockNextStep(); setStep(5); }} style={{ marginTop: '1rem' }}>Next Step</button>
           </motion.div>
         )}
+        {step === 5 && (
+  <motion.div key="step5" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
+    <HintBox step={5} />
+    <Step5MixColumns inputMatrix={shiftRowsOutput} />
+    <button onClick={() => { unlockNextStep(); setStep(6); }} style={{ marginTop: '1rem' }}>Next Step</button>
+  </motion.div>
+)}
+
       </AnimatePresence>
     </div>
   );
