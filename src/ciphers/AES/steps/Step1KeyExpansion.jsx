@@ -281,8 +281,24 @@ const Step1KeyExpansion = ({ roundKeys, words, currentStep }) => {
 
                     if (i < 4) {
                       return (
-                        <div key={i} className="word-line">
-                          w[{i}] = [{words[i].join(' ').toUpperCase()}] ← Original Key Word
+                        <div>
+                        <div key={i} className="expansion-diagram">
+          
+          <div className='step-block'>
+            w[{i}]
+        
+            </div>
+            <div className='arrow'>=</div>
+                      <div className='step-block result'> 
+                        <TooltipText tooltip="Original Key Word">
+                          <span className='final-result'> [{words[i].join(' ').toUpperCase()}]</span>
+          </TooltipText>
+                        
+                        </div> 
+
+
+                        
+                        </div>
                         </div>
                       );
                     }
