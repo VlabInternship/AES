@@ -10,6 +10,8 @@
   --tooltip-text: #fff;
   --border-radius: 6px;
   --font-mono: "Courier New", Courier, monospace;
+    --highlight-result: #c1f0c1;
+  --highlight-source: #ffeeba;
 }
 
 body {
