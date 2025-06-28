@@ -94,13 +94,13 @@ const AesSimulator = () => {
   const subBytesOutput =
     round0Output.length === 4 ? subBytes(round0Output) : [];
 
-  const shiftRowsOutput =
-    subBytesOutput.length === 4 ? shiftRows(subBytesOutput) : [];
+  const shiftRowsOutput = subBytesOutput.length === 4 ? shiftRows(subBytesOutput) : [];
 
-  const mixColumnsOutput =
-    shiftRowsOutput.length === 4 ? mixColumns(shiftRowsOutput) : [];
+  const mixColumnsOutput = shiftRowsOutput.length === 4 ? mixColumns(shiftRowsOutput) : [];
 
   const addRoundKeyOutput = roundKeys.length > 1 ? addRoundKey(mixColumnsOutput, roundKeys[1]) : [];
+  const subBytesRound2Input = addRoundKeyOutput.length === 4 ? subBytes(addRoundKeyOutput) : [];
+  const shiftRowsRound2Output = subBytesRound2Input.length === 4 ? shiftRows(subBytesRound2Input) : [];
   return (
     <div className="aes-container">
       <h2 style={{ textAlign: 'center' }}>
@@ -166,6 +166,7 @@ const AesSimulator = () => {
       <AnimatePresence mode="wait">
         {step === 0 && inputMatrix.length > 0 && keyMatrix.length > 0 && (
           <motion.div key="step0" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
+            <h3 className="title">Step 0: Input Preparation</h3>
             <HintBox step={0} />
             <Step0InputDisplay inputMatrix={inputMatrix} keyMatrix={keyMatrix} />
             <button onClick={() => { unlockNextStep(); setStep(1); }} style={{ marginTop: '1rem' }}>Next Step</button>
@@ -174,6 +175,7 @@ const AesSimulator = () => {
 
         {step === 1 && roundKeys.length > 0 && (
           <motion.div key="step1" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
+            <h3 className="title">Step 1: Key Expansion </h3>
             <HintBox step={1} />
             <Step1KeyExpansion roundKeys={roundKeys} words={words} currentStep={step} />
             <button onClick={() => { unlockNextStep(); setStep(2); }} style={{ marginTop: '1rem' }}>Next Step</button>
@@ -182,6 +184,7 @@ const AesSimulator = () => {
 
         {step === 2 && roundKeys.length > 0 && (
           <motion.div key="step2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
+            <h3 className='title'>Step 2: Round 0 - AddRoundKey</h3>
             <HintBox step={2} />
             <Step2InitialRound inputMatrix={inputMatrix} roundKey0={roundKeys[0]} />
             <button onClick={() => { unlockNextStep(); setStep(3); }} style={{ marginTop: '1rem' }}>Next Step</button>
@@ -190,6 +193,7 @@ const AesSimulator = () => {
 
         {step === 3 && (
           <motion.div key="step3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
+            <h3 className="title">Step 3: Round 1 Subbytes</h3>
             <HintBox step={3} />
             <Step3SubBytes inputMatrix={round0Output} />
             <button onClick={() => { unlockNextStep(); setStep(4); }} style={{ marginTop: '1rem' }}>Next Step</button>
@@ -198,6 +202,7 @@ const AesSimulator = () => {
 
         {step === 4 && (
           <motion.div key="step4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
+            <h3 className="title">Step 4: Round 1 - ShiftRows</h3>
             <HintBox step={4} />
             <Step4ShiftRows inputMatrix={subBytesOutput} />
             <button onClick={() => { unlockNextStep(); setStep(5); }} style={{ marginTop: '1rem' }}>Next Step</button>
@@ -205,6 +210,7 @@ const AesSimulator = () => {
         )}
         {step === 5 && (
   <motion.div key="step5" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
+    <h3 className="title">Step 5: Round 1 - MixColumns</h3>
     <HintBox step={5} />
     <Step5MixColumns inputMatrix={shiftRowsOutput} />
     <button onClick={() => { unlockNextStep(); setStep(6); }} style={{ marginTop: '1rem' }}>Next Step</button>
@@ -212,6 +218,7 @@ const AesSimulator = () => {
 )}
 {step === 6 && (
   <motion.div key="step6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
+    <h3 className="title">Step 6: Round 1 - AddRoundKey</h3>
     <HintBox step={6} />
     <Step6AddRoundKey
       inputMatrix={mixColumnsOutput}
@@ -222,7 +229,36 @@ const AesSimulator = () => {
     </button>
   </motion.div>
 )}
-
+{step === 7 && (
+  <motion.div key="step7" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
+    <h3 className="title">Step 7: Round 2 - SubBytes</h3>
+    <HintBox step={7} />
+    <Step3SubBytes inputMatrix={addRoundKeyOutput} />
+    <button onClick={() => { unlockNextStep(); setStep(8); }} style={{ marginTop: '1rem' }}>
+      Next Step
+    </button>
+  </motion.div>
+)}
+{step === 8 && (
+  <motion.div key="step8" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
+    <h3 className="title">Step 8: Round 2 - ShiftRows </h3>
+    <HintBox step={8} />
+    <Step4ShiftRows inputMatrix={subBytesRound2Input} />
+    <button onClick={() => { unlockNextStep(); setStep(9); }} style={{ marginTop: '1rem' }}>
+      Next Step 
+    </button>
+  </motion.div> 
+)}
+{step === 9 && (
+  <motion.div key="step9" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
+    <h3 className="title">Step 9: Round 2 - MixColumns</h3>
+    <HintBox step={9} />
+    <Step5MixColumns inputMatrix={shiftRowsRound2Output} />
+    <button onClick={() => { unlockNextStep(); setStep(10); }} style={{ marginTop: '1rem' }}>
+      Next Step
+    </button>
+  </motion.div>
+)}
 
       </AnimatePresence>
     </div>

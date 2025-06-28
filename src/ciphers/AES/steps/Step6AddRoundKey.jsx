@@ -21,7 +21,6 @@ const Step6AddRoundKey = ({ inputMatrix, roundKey }) => {
 
   return (
     <div>
-      <h3>Step 6: Round 1 - AddRoundKey</h3>
       <AnimatePresence mode="wait">
         <motion.div
           key="step6"

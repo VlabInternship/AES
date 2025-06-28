@@ -24,7 +24,6 @@ const Step4ShiftRows = ({ inputMatrix }) => {
 
   return (
     <div>
-      <h3>Step 4: Round 1 - ShiftRows</h3>
 
 
 

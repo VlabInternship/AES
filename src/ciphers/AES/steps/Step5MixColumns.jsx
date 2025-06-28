@@ -11,7 +11,6 @@ const Step5MixColumns = ({ inputMatrix }) => {
 
     return (
         <div>
-            <h3>Step 5: Round 1 - MixColumns</h3>
             <AnimatePresence mode="wait">
                 <motion.div
                     key="step5"

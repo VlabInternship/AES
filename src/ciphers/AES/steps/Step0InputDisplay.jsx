@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const Step0InputDisplay = ({ inputMatrix, keyMatrix }) => (
     <div>
-        <h3>Step 0: Input Preparation</h3>
         <AnimatePresence mode="wait">
             <motion.div
                 key="step0"

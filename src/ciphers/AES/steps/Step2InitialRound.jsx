@@ -20,7 +20,6 @@ const Step2InitialRound = ({ inputMatrix, roundKey0 }) => {
 
   return (
     <div>
-      <h3>Step 2: Intial Round - AddRoundKey</h3>
       <div className="step2-layout">
         <div className="step2-top-row">
           <div>

@@ -242,8 +242,6 @@ const Step1KeyExpansion = ({ roundKeys, words, currentStep }) => {
 
   return (
     <div>
-      <h3>Step 1: Key Expansion</h3>
-
       <div className="step1-grid">
         {roundKeys.map((keyMatrix, round) => {
           const highlightMap = {};

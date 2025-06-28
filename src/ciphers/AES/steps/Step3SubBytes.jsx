@@ -48,8 +48,6 @@ const Step3SubBytes = ({ inputMatrix }) => {
 
   return (
     <div>
-      <h3 className='title'>Step 3: SubBytes (Round 1)</h3>
-
       <p className="explanation-box">
         <strong>Each byte in the state matrix is substituted using Rijndael's S-Box. The high nibble
         of the byte selects the row and the low nibble selects the column in the S-Box table.</strong>
