@@ -8,14 +8,6 @@
   margin: 0 auto ;
 }
 
-.encryption-container,
-.decryption-container{
-  padding: 1rem;
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-
 /* Text should be centered within the container */
 .aes-container h2,
 .aes-container h3,
@@ -105,24 +97,6 @@ button:hover {
   flex-direction: column;
   align-items: center;
 }
-
-/*Step 0 */
-.step0-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  margin-top: 1.5rem;
-  padding: 1rem;
-}
-.step0-box {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
-  text-align: center;
-  margin-bottom: 2rem  ;
-}
-
 /*step navigator*/
 .step-navigator {
   display: flex;
@@ -140,6 +114,84 @@ button:hover {
   display: block;
   margin: 1.5rem auto 0;
   font-size: 1rem;
+}
+
+/*step 0*/
+.aes10-input-row,
+.aes10-step-row {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.aes10-box,
+.aes10-box-sm,
+.aes10-box-wide,
+.aes10-box-round {
+  background: #f9fbfe;
+  border: 1px solid #d0e3ff;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  font-family: monospace;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.aes10-box-wide {
+  margin: 0.25rem auto;
+  padding: 0.3rem 0.8rem;
+
+}
+
+.aes10-box-round {
+  background: #e7f2ff;
+  font-weight: bold;
+  border-left: 4px solid #339aff;
+  margin: 0.25rem auto;
+  padding: 0.3rem 0.8rem;
+}
+
+.no-mix {
+  background: #fde8e8;
+  color: #a60000;
+  border: 1px solid #ffbfbf;
+}
+
+.final {
+  background: #d5f2dd;
+  border-left: 4px solid #2c9732;
+  font-weight: bold;
+}
+
+.aes10-arrow {
+  text-align: center;
+  font-size: 1rem;
+  color: #aaa;
+  margin: -0.25rem 0;
+}
+
+.aes10-section {
+  margin-bottom: 0.8rem;
+}
+
+/*Step 1 */
+.step-grid {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  padding: 1rem;
+  justify-content: center ;
+}
+.step-box {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  margin-bottom: 2rem  ;
 }
 
 table {
@@ -197,7 +249,8 @@ section {
   margin-bottom: 2rem;
 }
 
-.step1-grid {
+/* Step 2 */
+.step2-grid {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   gap: 1.5rem;
@@ -205,12 +258,12 @@ section {
   margin-top: 1rem;
 }
 
-.step1-block {
+.step2-block {
   background: white;
   padding: 1rem 1rem 0.5rem;
   border-radius: var(--border-radius);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-  width: 100%;
+  max-width:fit-content;
 }
 
 .round-toggle {
@@ -223,8 +276,8 @@ section {
   border-bottom: 1px dashed var(--primary);
   padding-bottom: 0.25rem;
 }
-
-.step1-wblock {
+/* Expanded Version in step2*/
+.step-wblock {
   margin-top: 0.75rem;
   padding: 0.25rem 0.5rem;
   font-family: var(--font-mono);
@@ -233,13 +286,13 @@ section {
   align-items: center;
   gap: 0.4rem;
 }
-
+/*
 .word-line {
   background: var(--background-light);
   padding: 6px 10px;
   border-radius: var(--border-radius);
   font-size: 13px;
-}
+}*/
 
 .expansion-diagram {
   display: flex;
@@ -249,7 +302,6 @@ section {
   justify-content: flex-start;
   margin: 0.5rem 0 1rem;
 }
-
 .step-block {
   background: var(--background-light);
   padding: 10px 12px;
@@ -260,7 +312,6 @@ section {
   min-width: 110px;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
 }
-
 .step-block span {
   display: block;
   margin-top: 4px;
@@ -271,7 +322,50 @@ section {
   font-weight: bold;
   color: var(--primary-dark);
 }
+/*Sbox*/
+.sbox-subtitle {
+  font-size: 14px;
+  text-align: center;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+.sbox-table {
+  border-collapse: collapse;
+  font-family: monospace;
+  font-size: 13px;
+  width: 100%;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  table-layout: fixed;
+}
 
+.sbox-table td {
+  padding: 6px;
+  border: 1px solid #ccc;
+  min-width: 28px;
+  height: 28px;
+  transition: background 0.3s ease;
+}
+
+.sbox-table td:first-child,
+.sbox-table tr:first-child td {
+  background-color: #f1f1f1;
+  font-weight: bold;
+  color: #333;
+}
+
+.sbox-table td.highlight {
+  background-color: #c1f0c1;
+  font-weight: bold;
+}
+
+.sbox-table td:hover:not(:first-child):not(.highlight) {
+  background-color: #f9f9f9;
+}
+.xor-circle
+/*Rcon*/
 .rcon-table {
   border-collapse: collapse;
   margin-top: 0.5rem;
@@ -279,13 +373,11 @@ section {
   font-family: monospace;
   font-size: 13px;
 }
-
 .rcon-table th,
 .rcon-table td {
   border: 1px solid #ccc;
   padding: 6px 10px;
 }
-
 
 .result {
   background: var(--highlight-result);
@@ -295,6 +387,7 @@ section {
   color: var(--primary-dark);
 }
 
+/*Step 3*/
 .step2-layout {
   display: flex;
   flex-direction: column;
@@ -314,7 +407,12 @@ section {
   font-weight: bold;
   text-align: center;
 }
-
+.xor-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
 .xor-circle {
   width: 40px;
   height: 40px;
@@ -496,70 +594,6 @@ section {
 .step5-diagram-symbol {
   font-size: 1.5rem;
   font-weight: bold;
-}
-
-/*step 10
-*/
-
-
-.aes10-input-row,
-.aes10-step-row {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.aes10-box,
-.aes10-box-sm,
-.aes10-box-wide,
-.aes10-box-round {
-  background: #f9fbfe;
-  border: 1px solid #d0e3ff;
-  padding: 0.4rem 0.75rem;
-  font-size: 0.8rem;
-  font-family: monospace;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  text-align: center;
-  white-space: nowrap;
-}
-
-.aes10-box-wide {
-  margin: 0.25rem auto;
-  padding: 0.3rem 0.8rem;
-
-}
-
-.aes10-box-round {
-  background: #e7f2ff;
-  font-weight: bold;
-  border-left: 4px solid #339aff;
-  margin: 0.25rem auto;
-  padding: 0.3rem 0.8rem;
-}
-
-.no-mix {
-  background: #fde8e8;
-  color: #a60000;
-  border: 1px solid #ffbfbf;
-}
-
-.final {
-  background: #d5f2dd;
-  border-left: 4px solid #2c9732;
-  font-weight: bold;
-}
-
-.aes10-arrow {
-  text-align: center;
-  font-size: 1rem;
-  color: #aaa;
-  margin: -0.25rem 0;
-}
-
-.aes10-section {
-  margin-bottom: 0.8rem;
 }
 
 @media (max-width: 600px) {

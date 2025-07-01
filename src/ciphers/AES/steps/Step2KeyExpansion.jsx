@@ -12,12 +12,6 @@ const SBoxModal = ({ word, substituted, onClose }) => {
 
   return (
     <AnimatePresence>
-      <motion.div
-        className="modal-overlay"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      >
         <motion.div
           className="modal-content"
           initial={{ y: 60, opacity: 0 }}
@@ -65,24 +59,15 @@ const SBoxModal = ({ word, substituted, onClose }) => {
               ))}
             </tbody>
           </table>
-
           <button onClick={onClose} style={{ marginTop: '1rem' }}>Close</button>
         </motion.div>
-      </motion.div>
     </AnimatePresence>
   );
 };
 
-
 const RconModal = ({ rcon, onClose }) => {
   return (
     <AnimatePresence>
-      <motion.div
-        className="modal-overlay"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      >
         <motion.div
           className="modal-content"
           initial={{ y: 60, opacity: 0 }}
@@ -112,7 +97,6 @@ const RconModal = ({ rcon, onClose }) => {
           </table>
           <button onClick={onClose} style={{ marginTop: '1rem' }}>Close</button>
         </motion.div>
-      </motion.div>
     </AnimatePresence>
   );
 };
@@ -242,7 +226,7 @@ const Step1KeyExpansion = ({ roundKeys, words, currentStep }) => {
 
   return (
     <div>
-      <div className="step1-grid">
+      <div className="step2-grid">
         {roundKeys.map((keyMatrix, round) => {
           const highlightMap = {};
           const tooltipMap = {};
@@ -273,7 +257,7 @@ const Step1KeyExpansion = ({ roundKeys, words, currentStep }) => {
           }
 
           return (
-            <div key={round} className="step1-block">
+            <div key={round} className="step2-block">
               <h4 className="round-toggle" onClick={() => toggleRound(round)}>
                 Round Key {round} (Click to {expandedRounds.includes(round) ? 'Collapse' : 'Expand'})
               </h4>
@@ -281,7 +265,7 @@ const Step1KeyExpansion = ({ roundKeys, words, currentStep }) => {
               <MatrixTable matrix={keyMatrix} highlightMap={highlightMap} tooltipMap={tooltipMap} />
 
               {expandedRounds.includes(round) && (
-                <div className="step1-wblock">
+                <div className="step-wblock">
                   {round === 0 && (
   <p className='explanation-box'><strong>Original Key given by User is used as Round0 Key.</strong></p>
 )}

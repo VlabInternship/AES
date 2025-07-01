@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import MatrixTable from "../../../components/MatrixTable";
 import { addRoundKey } from "../../../shared/aes/addRoundKey";
+import { AnimatePresence } from "framer-motion";
 
 const Step2InitialRound = ({ inputMatrix, roundKey0 }) => {
   const [hoveredKey, setHoveredKey] = useState(null);
@@ -19,36 +20,40 @@ const Step2InitialRound = ({ inputMatrix, roundKey0 }) => {
   });
 
   return (
-    <div>
-      <div className="step2-layout">
-        <div className="step2-top-row">
-          <div>
-            <h4>Input State (Before):</h4>
-            <MatrixTable matrix={inputMatrix} />
+    <div className="aes-container">
+      <AnimatePresence mode="wait">
+        <>
+          <div className="step-grid">
+            <div className="step-box">
+              <h4 className="title">Input State (Before)</h4>
+              <div>
+                <MatrixTable matrix={inputMatrix} />
+              </div>
+            </div>
+            <div className="step-box">
+              <h4>RoundKey [0]:</h4>
+              <MatrixTable matrix={roundKey0} />
+            </div>
           </div>
-          <div>
-            <h4>RoundKey [0]:</h4>
-            <MatrixTable matrix={roundKey0} />
+          <div className="xor-wrapper">                 
+            <div className="xor-circle">
+              ⊕
+            </div>
           </div>
-        </div>
 
-        <div className="step2-center">
-          <div className="xor-circle">⊕</div>
-        </div>
-
-        <div className="step2-bottom">
-          <h4>State After AddRoundKey (Input ⊕ RoundKey[0]):</h4>
-          <MatrixTable matrix={resultMatrix} tooltipMap={tooltipMap} onCellHover={(k) => setHoveredKey(k)} />
-        </div>
-
-        {hoveredKey && (
-          <div className="explanation-box">
-            {tooltipMap[hoveredKey]}
+          <div className="step-grid">
+            <div className="step-box">
+              <h4>State After AddRoundKey (Input ⊕ RoundKey[0]):</h4>
+              <MatrixTable matrix={resultMatrix} tooltipMap={tooltipMap} onCellHover={(k) => setHoveredKey(k)} />
+            </div>
           </div>
-        )}
-      </div>
-
-
+          {hoveredKey && (
+            <div className="explanation-box">
+              {tooltipMap[hoveredKey]}
+            </div>
+          )}
+        </>
+      </AnimatePresence>
     </div>
   );
 };

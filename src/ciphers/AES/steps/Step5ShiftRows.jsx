@@ -21,82 +21,92 @@ const Step4ShiftRows = ({ inputMatrix }) => {
   }
 
   const rowLabels = ['Row 0 (no shift)', 'Row 1 (←1)', 'Row 2 (←2)', 'Row 3 (←3)'];
+  const shiftedRowLabels = ['Row 0 ', 'Row 1 ', 'Row 2', 'Row 3 ']
 
   return (
     <div>
-
-
-
-      <AnimatePresence mode='wait'>
+      <AnimatePresence mode="wait">
         <motion.div
-          className="step4-grid"
-          key="step4"
+          className="step-grid"
+          key="step5"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.4 }}
         >
-          <div className="step4-box">
+          <div className="step-box">
             <h4 className="title">State Before ShiftRows:</h4>
             <MatrixTable matrix={inputMatrix} />
           </div>
-          <div className="explanation-box">
+
+          <div className="step-box">
+            <h4 className="title">State After ShiftRows:</h4>
+            <MatrixTable
+              tooltipMap={tooltipMap}
+
+              matrix={resultMatrix}
+              onCellHover={setHoveredKey}
+            />
+          </div>
+        </motion.div>
+        <motion.div key="step5"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.4 }}
+        >
+          <div className="step-box">
+            <h4 className="title">Row-wise Shifts:</h4>
+            {hoveredKey && (
+            <div className="explanation-box">
+              {tooltipMap[hoveredKey]}
+            </div>
+          )}
             {inputMatrix.map((_, row) => (
-              <div className="step4-row" key={row}>
+              <div className="step4-row" key={row} style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
                 <div>
-                  <h4>{rowLabels[row]}</h4>
+                  <h5>{rowLabels[row]}</h5>
                   <table><tbody><tr>
                     {inputMatrix[row].map((val, col) => (
                       <td key={col}>{val.toUpperCase()}</td>
                     ))}
                   </tr></tbody></table>
                 </div>
-                <div className="arrow">→</div>
-                <div className="motion-table">
-                  <table><tbody><tr>
-                    {resultMatrix[row].map((val, col) => {
-                      const key = `${row}-${col}`;
-                      return (
-                        <motion.td
-                          key={col}
-                          initial={{ x: -40 * row, opacity: 0 }}
-                          animate={{ x: 0, opacity: 1 }}
-                          transition={{ duration: 0.4 + row * 0.1 }}
-                          style={{
-                            position: 'relative',
-                            cursor: tooltipMap[key] ? 'help' : 'default',
-                            backgroundColor: 'var(--background-light)',
-                            fontFamily: 'var(--font-mono)',
-                            padding: '10px',
-                            minWidth: '40px',
-                            textAlign: 'center'
-                          }}
-                          onMouseEnter={() => setHoveredKey(key)}
-                          onMouseLeave={() => setHoveredKey(null)}
-                        >
-                          {val.toUpperCase()}
-                        </motion.td>
-                      );
-                    })}
-                  </tr></tbody></table>
+                <div className="arrow" style={{ margin: '0 10px' }}>→</div>
+                <div>
+                  <table><tbody><h5>{shiftedRowLabels[row]}</h5>
+                    <tr>
+                      {resultMatrix[row].map((val, col) => {
+                        const key = `${row}-${col}`;
+                        return (
+                          <motion.td
+                            key={col}
+                            initial={{ x: -40 * row, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            transition={{ duration: 0.4 + row * 0.1 }}
+                            style={{
+                              position: 'relative',
+                              backgroundColor: 'var(--background-light)',
+                              fontFamily: 'var(--font-mono)',
+                              padding: '10px',
+                              minWidth: '40px',
+                              textAlign: 'center'
+                            }}
+
+                          >
+                            {val.toUpperCase()}
+                          </motion.td>
+                        );
+                      })}
+                    </tr></tbody></table>
                 </div>
               </div>
             ))}
-
-            {hoveredKey && (
-              <div className="explanation-box">
-                {tooltipMap[hoveredKey]}
-              </div>
-            )}
-            </div>
-            <div className="step4-box">
-            <h4 className="title">State After ShiftRows:</h4>
-            <MatrixTable matrix={resultMatrix} />
           </div>
-          </motion.div>
+          
+        </motion.div>
       </AnimatePresence>
     </div>
-
   );
 };
 
