@@ -5,7 +5,16 @@
   background-color: white;
   border-radius: var(--border-radius);
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.06);
+  margin: 0 auto ;
 }
+
+.encryption-container,
+.decryption-container{
+  padding: 1rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
 
 /* Text should be centered within the container */
 .aes-container h2,
@@ -168,7 +177,7 @@ td[data-highlight="source"] {
   pointer-events: auto;  /* ← allow interactivity */
 }
 
-title {
+.title {
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--primary-dark);
@@ -487,6 +496,70 @@ section {
 .step5-diagram-symbol {
   font-size: 1.5rem;
   font-weight: bold;
+}
+
+/*step 10
+*/
+
+
+.aes10-input-row,
+.aes10-step-row {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.aes10-box,
+.aes10-box-sm,
+.aes10-box-wide,
+.aes10-box-round {
+  background: #f9fbfe;
+  border: 1px solid #d0e3ff;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  font-family: monospace;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.aes10-box-wide {
+  margin: 0.25rem auto;
+  padding: 0.3rem 0.8rem;
+
+}
+
+.aes10-box-round {
+  background: #e7f2ff;
+  font-weight: bold;
+  border-left: 4px solid #339aff;
+  margin: 0.25rem auto;
+  padding: 0.3rem 0.8rem;
+}
+
+.no-mix {
+  background: #fde8e8;
+  color: #a60000;
+  border: 1px solid #ffbfbf;
+}
+
+.final {
+  background: #d5f2dd;
+  border-left: 4px solid #2c9732;
+  font-weight: bold;
+}
+
+.aes10-arrow {
+  text-align: center;
+  font-size: 1rem;
+  color: #aaa;
+  margin: -0.25rem 0;
+}
+
+.aes10-section {
+  margin-bottom: 0.8rem;
 }
 
 @media (max-width: 600px) {

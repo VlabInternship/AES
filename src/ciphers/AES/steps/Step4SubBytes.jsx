@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import MatrixTable from '../../../components/MatrixTable';
 import { SBOX, SBOX_INDEXED } from '../../../shared/aes/constants';
 import { subBytes } from '../../../shared/aes/subBytes';
-import HintBox from '../../../components/HintBox';
 
 const Step3SubBytes = ({ inputMatrix }) => {
   const [hoveredKey, setHoveredKey] = useState(null);
