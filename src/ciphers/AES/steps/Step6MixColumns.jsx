@@ -18,7 +18,7 @@ const Step5MixColumns = ({ inputMatrix }) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.4 }}
-                    className="step-grid">
+                    className="step-row-grid">
                     {/* Input matrix */}
                     <div className="step-box">
                         <h4 className="title">Input to MixColumns</h4>

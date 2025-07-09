@@ -1,18 +1,18 @@
-// src/ciphers/AES/steps/Step2InitialRound.jsx
+// src/ciphers/AES/steps/Step3InitialRound.jsx
 import React, { useState } from "react";
 import MatrixTable from "../../../components/MatrixTable";
 import { addRoundKey } from "../../../shared/aes/addRoundKey";
 import { AnimatePresence } from "framer-motion";
 
-const Step2InitialRound = ({ inputMatrix, roundKey0 }) => {
+const Step3InitialRound = ({ inputMatrix, roundKey, round }) => {
   const [hoveredKey, setHoveredKey] = useState(null);
-  const resultMatrix = addRoundKey(inputMatrix, roundKey0);
+  const resultMatrix = addRoundKey(inputMatrix, roundKey);
   const tooltipMap = {};
 
   inputMatrix.forEach((row, i) => {
     row.forEach((val, j) => {
       const stateVal = val.toUpperCase();
-      const keyVal = roundKey0[i][j].toUpperCase();
+      const keyVal = roundKey[i][j].toUpperCase();
       const resultVal = resultMatrix[i][j].toUpperCase();
       const key = `${i}-${j}`;
       tooltipMap[key] = `0x${stateVal} ⊕ 0x${keyVal} = 0x${resultVal}`;
@@ -23,7 +23,7 @@ const Step2InitialRound = ({ inputMatrix, roundKey0 }) => {
     <div className="aes-container">
       <AnimatePresence mode="wait">
         <>
-          <div className="step-grid">
+          <div className="step-row-grid">
             <div className="step-box">
               <h4 className="title">Input State (Before)</h4>
               <div>
@@ -31,8 +31,8 @@ const Step2InitialRound = ({ inputMatrix, roundKey0 }) => {
               </div>
             </div>
             <div className="step-box">
-              <h4>RoundKey [0]:</h4>
-              <MatrixTable matrix={roundKey0} />
+              <h4>RoundKey [{round}]:</h4>
+              <MatrixTable matrix={roundKey} />
             </div>
           </div>
           <div className="xor-wrapper">                 
@@ -41,9 +41,9 @@ const Step2InitialRound = ({ inputMatrix, roundKey0 }) => {
             </div>
           </div>
 
-          <div className="step-grid">
+          <div className="step-row-grid">
             <div className="step-box">
-              <h4>State After AddRoundKey (Input ⊕ RoundKey[0]):</h4>
+              <h4>State After AddRoundKey (Input ⊕ RoundKey[{round}]):</h4>
               <MatrixTable matrix={resultMatrix} tooltipMap={tooltipMap} onCellHover={(k) => setHoveredKey(k)} />
             </div>
           </div>
@@ -58,4 +58,4 @@ const Step2InitialRound = ({ inputMatrix, roundKey0 }) => {
   );
 };
 
-export default Step2InitialRound;
+export default Step3InitialRound;

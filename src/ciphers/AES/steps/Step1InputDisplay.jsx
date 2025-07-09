@@ -5,7 +5,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 const Step1InputDisplay = ({ inputMatrix, keyMatrix }) => (
     <div className='aes-container'>
         <AnimatePresence mode="wait">
-            <div className="step-grid">
+        <motion.div
+          className="step-row-grid"
+          key="step1"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.4 }}
+        >
                 <div className="step-box">
                     <h4 className="title">Input Matrix</h4>
                     <div>
@@ -18,7 +25,7 @@ const Step1InputDisplay = ({ inputMatrix, keyMatrix }) => (
                         <MatrixTable matrix={keyMatrix} />
                     </div>
                 </div>
-            </div>
+            </motion.div>
         </AnimatePresence>
     </div>
 );

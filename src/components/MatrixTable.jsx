@@ -7,50 +7,65 @@ const MatrixTable = ({
   tooltipMap = {},
   hoveredCell = null,
   onCellHover = () => {}
-}) => (
-  <table border="1" cellPadding="10">
-    <tbody>
-      {matrix.map((row, i) => (
-        <tr key={i}>
-          {row.map((cell, j) => {
-            const key = `${i}-${j}`;
-            const bg =
-              highlightMap[key] === 'result'
-                ? '#c1f0c1'
-                : highlightMap[key] === 'source'
-                ? '#ffeeba'
-                : 'white';
+}) => {
 
-            return (
-              <td
-                key={j}
-                style={{
-                  backgroundColor: bg,
-                  transition: 'background 0.3s ease',
-                  position: 'relative',
-                  fontFamily: 'monospace',
-                  padding: '10px',
-                  cursor: tooltipMap[key] ? 'help' : 'default',
-                  overflow: 'visible',
-                }}
-                onMouseEnter={() => onCellHover(key)}
-                onMouseLeave={() => onCellHover(null)}
-              >
-                {cell.toUpperCase()}
+  const formatCell = (cell) => {
+    if (cell === undefined || cell === null) return '';
+    return String(cell).toUpperCase();
+  };
 
-                {hoveredCell === key && tooltipMap[key] && (
-                  <div className="tooltip-box">
-                    {tooltipMap[key]}
-                  </div>
-                )}
-              </td>
-            );
-          })}
-        </tr>
-      ))}
-    </tbody>
-  </table>
-);
+  const getBackgroundColor = (i, j) => {
+    const key = `${i}-${j}`;
+    if (highlightMap[key] === 'result') return '#c1f0c1';
+    if (highlightMap[key] === 'source') return '#ffeeba';
+
+    // Highlight last bit of each row as parity (DES key only)
+    const isParityBit = j === 7;
+    if (isParityBit && highlightMap.__parity__) return '#ffcccc';
+
+    return 'white';
+  };
+
+  return (
+    <table border="1" cellPadding="10">
+      <tbody>
+        {matrix.map((row, i) => (
+          <tr key={i}>
+            {row.map((cell, j) => {
+              const key = `${i}-${j}`;
+              const bg = getBackgroundColor(i, j);
+
+              return (
+                <td
+                  key={j}
+                  style={{
+                    backgroundColor: bg,
+                    transition: 'background 0.3s ease',
+                    position: 'relative',
+                    fontFamily: 'monospace',
+                    padding: '10px',
+                    cursor: tooltipMap[key] ? 'help' : 'default',
+                    overflow: 'visible',
+                  }}
+                  onMouseEnter={() => onCellHover(key)}
+                  onMouseLeave={() => onCellHover(null)}
+                >
+                  {formatCell(cell)}
+
+                  {hoveredCell === key && tooltipMap[key] && (
+                    <div className="tooltip-box">
+                      {tooltipMap[key]}
+                    </div>
+                  )}
+                </td>
+              );
+            })}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
 
 MatrixTable.propTypes = {
   matrix: PropTypes.array.isRequired,

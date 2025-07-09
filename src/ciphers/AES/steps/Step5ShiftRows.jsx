@@ -27,7 +27,7 @@ const Step4ShiftRows = ({ inputMatrix }) => {
     <div>
       <AnimatePresence mode="wait">
         <motion.div
-          className="step-grid"
+          className="step-row-grid"
           key="step5"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -80,7 +80,7 @@ const Step4ShiftRows = ({ inputMatrix }) => {
                         const key = `${row}-${col}`;
                         return (
                           <motion.td
-                            key={col}
+                            key ={col}
                             initial={{ x: -40 * row, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
                             transition={{ duration: 0.4 + row * 0.1 }}

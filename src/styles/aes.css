@@ -97,24 +97,6 @@ button:hover {
   flex-direction: column;
   align-items: center;
 }
-/*step navigator*/
-.step-navigator {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 20px 0;
-  justify-content: center;
-}
-
-.step-navigator button {
-  min-width: 80px;
-}
-
-.next-step-btn {
-  display: block;
-  margin: 1.5rem auto 0;
-  font-size: 1rem;
-}
 
 /*step 0*/
 .aes10-input-row,
@@ -194,6 +176,14 @@ button:hover {
   margin-bottom: 2rem  ;
 }
 
+.step-row-grid{
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  padding: 1rem;
+  justify-content: center ;
+  margin-bottom: fit-content  ;
+}
 table {
   border-collapse: collapse;
   margin: auto;

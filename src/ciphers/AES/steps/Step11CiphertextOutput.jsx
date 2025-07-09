@@ -30,7 +30,7 @@ const Step11CiphertextOutput = ({ inputHex, keyHex }) => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.4 }}
-          className="step-grid">
+          className="step-row-grid">
           {paddedInputMatrix.length > 0 && (
             <div className="step-box">
               <h4 className="title">Padded Input Matrix (HEX)</h4>

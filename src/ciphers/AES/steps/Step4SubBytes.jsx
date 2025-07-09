@@ -52,8 +52,8 @@ const Step3SubBytes = ({ inputMatrix }) => {
         of the byte selects the row and the low nibble selects the column in the S-Box table.</strong>
       </p>
 
-      <div className="subbytes-grid">
-        <div>
+      <div className="step-row-grid">
+        <div className="step-box" style={{ width: '400px' }}>
           <h4>State Before SubBytes (from Step 2):</h4>
           <MatrixTable
             matrix={inputMatrix}
@@ -61,7 +61,7 @@ const Step3SubBytes = ({ inputMatrix }) => {
           />
         </div>
 
-        <div>
+        <div className="step-box" style={{ width: '400px' }}>
           <h4>State After SubBytes:</h4>
           <MatrixTable
             matrix={formattedResultMatrix}
