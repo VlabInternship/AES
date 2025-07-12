@@ -18,6 +18,8 @@ const MatrixTable = ({
     const key = `${i}-${j}`;
     if (highlightMap[key] === 'result') return '#c1f0c1';
     if (highlightMap[key] === 'source') return '#ffeeba';
+    if (highlightMap[key] === 'dropped') return '#ffcccc';
+    if (highlightMap[key] === 'parity') return '#ffcccc';
 
     // Highlight last bit of each row as parity (DES key only)
     const isParityBit = j === 7;

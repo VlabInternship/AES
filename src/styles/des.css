@@ -1,0 +1,232 @@
+/* DES Container */
+.des-container {
+  max-width: 1280px;
+  padding: 2rem 2rem;
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.06);
+  margin: 0 auto ;
+}
+
+.des-container h2,
+.des-container h3,
+.des-container h4 {
+  margin-top: 0;
+}
+
+/* Form structure */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: start;
+  margin-bottom: 2rem;
+}
+
+.form-left,
+.form-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-left label,
+.form-right label {
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+  color: var(--primary-dark);
+}
+
+.form-left input {
+ width: 100%;
+  max-width: 400px;
+  min-height: 42px;
+  padding: 10px;
+  font-size: 1rem;
+  font-family: var(--font-mono);
+  word-spacing: 4px;
+  box-sizing: border-box;
+  border: 1px solid var(--primary);
+  border-radius: var(--border-radius);
+  background-color: #f3f3f3;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: start;
+}
+
+.hex-output {
+  width: 100%;
+  max-width: 700px;
+  min-height: 42px;
+  padding: 10px;
+  font-size: 1rem;
+  font-family: var(--font-mono);
+  word-spacing: 4px;
+  box-sizing: border-box;
+  border: 1px solid var(--primary);
+  border-radius: var(--border-radius);
+  background-color: #f3f3f3;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: start;
+}
+
+/*Step 0 */
+.des0-input-row,
+.des0-step-row {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.des0-box,
+.des0-box-sm,
+.des0-box-wide,
+.des0-box-round {
+  background: #f9fbfe;
+  border: 1px solid #d0e3ff;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  font-family: monospace;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.des0-box-wide {
+  margin: 0.25rem auto;
+  padding: 0.3rem 0.8rem;
+}
+
+.des0-box-round {
+  background: #e7f2ff;
+  font-weight: bold;
+  border-left: 4px solid #339aff;
+  margin: 0.25rem auto;
+  padding: 0.3rem 0.8rem;
+}
+
+.des0-box-sm.nested {
+  background-color: #f0f8ff;
+  border: 1px dashed #aaa;
+  margin-bottom: 2px;
+}
+
+.des0-arrow {
+  text-align: center;
+  font-size: 1rem;
+  color: #aaa;
+  margin: -0.25rem 0;
+}
+
+.des0-box-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 6px;
+}
+
+.des0-nested-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.des0-box-final {
+  background: #d5f2dd;
+  border-left: 4px solid #2c9732;
+  font-weight: bold;
+}
+/*Step 1 */
+.step-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1rem;
+  justify-content: center ;
+}
+.step-row-grid{
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  padding: 1rem;
+  justify-content: center ;
+}
+.step-box {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  margin-bottom: 2rem ;
+}
+
+table {
+  border-collapse: collapse;
+  margin: auto;
+}
+
+td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  font-family: var(--font-mono);
+  transition: background 0.3s ease;
+  overflow: visible;
+}
+
+td[data-highlight="result"] {
+  background-color: var(--highlight-result);
+}
+
+td[data-highlight="source"] {
+  background-color: var(--highlight-source);
+}
+
+.tooltip-box {
+  position: absolute;
+  top: 120%;
+  left: 0;
+  background: #333;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 20;
+  max-width: 260px;
+  white-space: pre-line;
+  pointer-events: auto;  /* ← allow interactivity */
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+  text-align: 'center'
+}
+
+.explanation-box {
+  font-family: var(--font-mono);
+  background-color: var(--background-light);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  transition: background-color 0.3s ease;
+}
+
+section {
+  margin-bottom: 2rem;
+}
+
+.legend-box {
+  background-color: var(--background-light);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  margin: 1rem 0;
+  border: 1px solid #ddd;
+}
+
