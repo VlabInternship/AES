@@ -102,7 +102,6 @@ const RconModal = ({ rcon, onClose }) => {
 };
 
 const WordExpansionBlock = ({ i, words }) => {
-  const [showModal, setShowModal] = useState(false);
   const [word, setWord] = useState([]);
   const [substituted, setSubstituted] = useState([]);
   const [modalType, setModalType] = useState(null); // 'sbox' or 'rcon'
@@ -149,7 +148,7 @@ const WordExpansionBlock = ({ i, words }) => {
           <TooltipText tooltip="Each byte is substituted using S-Box">
             <span
               onClick={handleSubwordClick}
-              style={{ textDecoration: 'underline dotted', color: '#0070f3', cursor: 'pointer' }}
+              style={{  color: '#0070f3', cursor: 'pointer' }}
             >
               Subword
             </span>
@@ -164,7 +163,7 @@ const WordExpansionBlock = ({ i, words }) => {
           <TooltipText tooltip="Round constant for this iteration">
             <span
               onClick={handleRconClick}
-              style={{ textDecoration: 'underline dotted', color: '#0070f3', cursor: 'pointer' }}
+              style={{color: '#0070f3', cursor: 'pointer' }}
             >
               RCON[{Math.floor(i / 4)}]
             </span>
@@ -210,7 +209,7 @@ const WordExpansionBlock = ({ i, words }) => {
 }
 const Step1KeyExpansion = ({ roundKeys, words, currentStep }) => {
   const [expandedRounds, setExpandedRounds] = useState([]);
-  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [hoveredIndex] = useState(null);
 
   useEffect(() => {
     if (currentStep === 1 && !expandedRounds.includes(0)) {
