@@ -1,16 +1,16 @@
 // src/ciphers/AES/AesSimulator.jsx
 import React, { useState } from 'react';
-import '../../styles/aes.css';
-import { asciiToHex } from '../../shared/aes/asciiToHex';
-import { toMatrix } from '../../shared/aes/toMatrix';
-import { padInput } from '../../shared/aes/padInput';
-import { expandKey } from '../../shared/aes/keyExpansion';
-import { addRoundKey } from '../../shared/aes/addRoundKey';
-import { subBytes } from '../../shared/aes/subBytes';
-import { shiftRows } from '../../shared/aes/shiftRows';
-import { mixColumns } from '../../shared/aes/mixColumns';
+import '../../../styles/aes.css';
+import { asciiToHex } from '../../../shared/aes/asciiToHex';
+import { toMatrix } from '../../../shared/aes/toMatrix';
+import { padInput } from '../../../shared/aes/padInput';
+import { expandKey } from '../../../shared/aes/keyExpansion';
+import { addRoundKey } from '../../../shared/aes/addRoundKey';
+import { subBytes } from '../../../shared/aes/subBytes';
+import { shiftRows } from '../../../shared/aes/shiftRows';
+import { mixColumns } from '../../../shared/aes/mixColumns';
 
-import Step0AesRoundFlow from './steps/Step0AesRoundFlow';
+import Step0AesEncryptRoundFlow from './steps/Step0AesEncryptRoundFlow';
 import Step1InputDisplay from './steps/Step1InputDisplay';
 import Step2KeyExpansion from './steps/Step2KeyExpansion';
 import Step3InitialRound from './steps/Step3InitialRound';
@@ -19,9 +19,8 @@ import Step5ShiftRows from './steps/Step5ShiftRows';
 import Step6MixColumns from './steps/Step6MixColumns';
 import Step11CiphertextOutput from './steps/Step11CiphertextOutput';
 
-import StepNavigator from '../../components/StepNavigator';
-import HintBox from '../../components/HintBox';
-
+import StepNavigator from '../../../components/StepNavigator';
+import HintBox from '../../../components/HintBox';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const AesSimulator = () => {
@@ -165,7 +164,7 @@ const AesSimulator = () => {
             <h3>Step 0 : AES-128 Round Structure (Compact Overview)</h3>
 
             <HintBox step={0} />
-            <Step0AesRoundFlow />
+            <Step0AesEncryptRoundFlow />
             <button onClick={() => { unlockNextStep(); setStep(1); }} style={{ marginTop: '1rem' }}>Next Step</button>
           </motion.div>
         )}

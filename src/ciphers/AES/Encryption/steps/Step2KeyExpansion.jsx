@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import MatrixTable from '../../../components/MatrixTable';
-import TooltipText from '../../../components/TooltipText';
-import { rotWord, subWord } from '../../../shared/aes/keyExpansion';
-import { RCON, SBOX_INDEXED } from '../../../shared/aes/constants';
+import MatrixTable from '../../../../components/MatrixTable';
+import TooltipText from '../../../../components/TooltipText';
+import { rotWord, subWord } from '../../../../shared/aes/keyExpansion';
+import { RCON, SBOX_INDEXED } from '../../../../shared/aes/constants';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const SBoxModal = ({ word, substituted, onClose }) => {

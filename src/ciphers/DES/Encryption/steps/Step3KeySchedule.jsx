@@ -1,8 +1,8 @@
 // ✅ Integrate PC-1 and C0/D0 visualization into Step 4's round 0 expand block
 import React, { useEffect, useState } from 'react';
-import MatrixTable from '../../../components/MatrixTable';
+import MatrixTable from '../../../../components/MatrixTable';
 import { motion } from 'framer-motion';
-import { prepareKeyScheduleMatrix, getCDHalvesPerRound, applyPC1WithTrace, getBeforePC1PerRound, applyPC2WithTrace } from '../../../shared/des/keyScheduleHelper';
+import { prepareKeyScheduleMatrix, getCDHalvesPerRound, applyPC1WithTrace, getBeforePC1PerRound, applyPC2WithTrace } from '../../../../shared/des/keyScheduleHelper';
 
 const Step3KeySchedule = ({ keyBits, onKeysGenerated }) => {
   const [roundKeys, setRoundKeys] = useState([]);

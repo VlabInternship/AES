@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import MatrixTable from '../../../components/MatrixTable';
-import { shiftRows } from '../../../shared/aes/shiftRows';
+import MatrixTable from '../../../../components/MatrixTable';
+import { invShiftRows } from '../../../../shared/aes/invShiftRows';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Step4ShiftRows = ({ inputMatrix }) => {
+const Step4InvShiftRows = ({ inputMatrix }) => {
   const [hoveredKey, setHoveredKey] = useState(null);
-  const resultMatrix = shiftRows(inputMatrix);
+  const resultMatrix = invShiftRows(inputMatrix);
 
   const tooltipMap = {};
   for (let row = 0; row < 4; row++) {
@@ -110,4 +110,4 @@ const Step4ShiftRows = ({ inputMatrix }) => {
   );
 };
 
-export default Step4ShiftRows;
+export default Step4InvShiftRows;

@@ -31,7 +31,7 @@ function leftShift(bits, n) {
  * @param {string[]} hexKey - array of 8 hex bytes (e.g., ['13','34','57','79','9B','BC','DF','F1'])
  * @returns {string[][]} - array of 16 round keys (each is 6 hex bytes)
  */
-function generateRoundKeys(hexKey = []) {
+export function generateRoundKeys(hexKey = []) {
   const binKey = hexKey.map(h => parseInt(h, 16).toString(2).padStart(8, '0')).join('');
   const key56 = PC1.map(i => binKey[i - 1]).join('');
 
@@ -195,4 +195,28 @@ export function applyPC2WithTrace(cdBits) {
     traceMap,                      // e.g. { 0: 0, 1: 1, ... }
     droppedBitIndices: droppedBits
   };
+}
+
+
+/**
+ * Generate 16 round keys as 48-bit binary strings
+ * @param {string} keyBits - 64-bit binary string
+ * @returns {string[]} - Array of 16 strings, each 48 bits long
+ */
+export function generateBinaryRoundKeys(keyBits) {
+  const hexBytes = [];
+  for (let i = 0; i < 64; i += 8) {
+    const byte = keyBits.slice(i, i + 8);
+    hexBytes.push(parseInt(byte, 2).toString(16).padStart(2, '0'));
+  }
+
+  const hexRoundKeys = generateRoundKeys(hexBytes); // returns array of 6-hex-byte arrays
+
+  const binaryRoundKeys = hexRoundKeys.map(hexArr =>
+    hexArr
+      .map(h => parseInt(h, 16).toString(2).padStart(8, '0'))
+      .join('')
+  );
+
+  return binaryRoundKeys; // array of 48-bit binary strings
 }

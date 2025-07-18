@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import MatrixTable from '../../../components/MatrixTable';
+import MatrixTable from '../../../../components/MatrixTable';
 import { motion } from 'framer-motion';
-import { getPermutationCoordinateMap } from '../../../shared/des/initialPermutation';
+import { getPermutationCoordinateMap } from '../../../../shared/des/initialPermutation';
 
 const Step2InitialPermutationAndSplit = ({ inputBits, permutedBits }) => {
   const bits = inputBits?.split('') || [];

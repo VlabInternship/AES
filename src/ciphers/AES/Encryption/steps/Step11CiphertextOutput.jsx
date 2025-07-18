@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import MatrixTable from '../../../components/MatrixTable';
+import MatrixTable from '../../../../components/MatrixTable';
 import { motion, AnimatePresence } from 'framer-motion';
-import { encrypt } from '../../../components/Encryption';
+import { AesEncryption } from '../../../../components/AesEncryption';
 
 const Step11CiphertextOutput = ({ inputHex, keyHex }) => {
   const {
@@ -11,7 +11,7 @@ const Step11CiphertextOutput = ({ inputHex, keyHex }) => {
     ascii
   } = useMemo(() => {
     if (inputHex.length === 16 && keyHex.length === 16) {
-      return encrypt(inputHex, keyHex, true); // third arg = true for pre-padded input
+      return AesEncryption(inputHex, keyHex, true); // third arg = true for pre-padded input
     }
     return {
       paddedInputMatrix: [],
@@ -25,7 +25,7 @@ const Step11CiphertextOutput = ({ inputHex, keyHex }) => {
     <div className='aes-container'>
       <AnimatePresence mode="wait">
         <motion.div
-          key="step6"
+          key="step11"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}

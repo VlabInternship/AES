@@ -1,6 +1,6 @@
 // src/ciphers/DES/steps/Step1InputPreparation.jsx
 import React, { useState } from 'react';
-import MatrixTable from '../../../components/MatrixTable';
+import MatrixTable from '../../../../components/MatrixTable';
 import { motion } from 'framer-motion';
 
 const Step1InputPreparation = ({ inputMatrix, keyMatrix }) => {

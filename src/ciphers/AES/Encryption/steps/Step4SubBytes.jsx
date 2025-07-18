@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import MatrixTable from '../../../components/MatrixTable';
-import { SBOX, SBOX_INDEXED } from '../../../shared/aes/constants';
-import { subBytes } from '../../../shared/aes/subBytes';
+import MatrixTable from '../../../../components/MatrixTable';
+import { SBOX, SBOX_INDEXED } from '../../../../shared/aes/constants';
+import { subBytes } from '../../../../shared/aes/subBytes';
 
-const Step3SubBytes = ({ inputMatrix }) => {
+const Step4SubBytes = ({ inputMatrix }) => {
   const [hoveredKey, setHoveredKey] = useState(null);
   const [pinnedKey, setPinnedKey] = useState(null);
 
@@ -129,4 +129,4 @@ const Step3SubBytes = ({ inputMatrix }) => {
   );
 };
 
-export default Step3SubBytes;
+export default Step4SubBytes;

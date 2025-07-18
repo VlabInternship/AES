@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import MatrixTable from '../../../components/MatrixTable';
+import MatrixTable from '../../../../components/MatrixTable';
 
 const Step4Round1 = ({ L0Bits, R0Bits, K1Bits, expandedR, xorWithKey, sboxOutput, pboxOutput, R1Bits }) => {
   const isValidBits = (bits, length) =>

@@ -1,8 +1,8 @@
 // src/ciphers/AES/steps/Step5MixColumns.jsx
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import MatrixTable from '../../../components/MatrixTable';
-import { mixColumns, generateMixMatrix } from '../../../shared/aes/mixColumns';
+import MatrixTable from '../../../../components/MatrixTable';
+import { mixColumns, generateMixMatrix } from '../../../../shared/aes/mixColumns';
 
 const Step5MixColumns = ({ inputMatrix }) => {
     const mixMatrix = generateMixMatrix();
@@ -57,9 +57,6 @@ const Step5MixColumns = ({ inputMatrix }) => {
                     <div className="explanation-box">
                         The input matrix is multiplied by a fixed matrix using special byte-wise math. This mixes the column values to make the output more secure.
                     </div>
-
-
-
                 </motion.div>
             </AnimatePresence>
         </div >

@@ -1,7 +1,7 @@
 // src/ciphers/AES/steps/Step10AesRoundFlow.jsx
 import React from 'react';
 
-const Step10AesRoundFlow = () => {
+const Step0AesEncryptRoundFlow = () => {
   const rounds = Array.from({ length: 11 }, (_, i) => i);
 
   return (
@@ -52,4 +52,4 @@ const Step10AesRoundFlow = () => {
   );
 };
 
-export default Step10AesRoundFlow;
+export default Step0AesEncryptRoundFlow;

@@ -9,7 +9,7 @@ import { shiftRows } from '../shared/aes/shiftRows';
 import { mixColumns } from '../shared/aes/mixColumns';
 
 // src/components/Encryption.jsx
-export function encrypt(inputHex, keyHex, isPadded = false) {
+export function AesEncryption(inputHex, keyHex, isPadded = false) {
   const paddedInput = isPadded ? inputHex : padInput(asciiToHex(inputHex));
   const paddedKey = isPadded ? keyHex : padInput(asciiToHex(keyHex));
 
