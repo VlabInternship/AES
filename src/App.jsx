@@ -17,6 +17,7 @@ function App() {
           <Route path="/aes/encrypt" element={<AesEncryptor />} />
           <Route path="/aes/decrypt" element={<AesDecryptor />} />
           <Route path="/des/encrypt" element={<DesEncryptor />} />
+          <Route path="/des/decrypt" element={<DesDecryptor />} />
         </Routes>
       </div>
     </Router>

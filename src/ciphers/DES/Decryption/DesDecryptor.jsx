@@ -1,6 +1,6 @@
-/*DesDecryptor.jsx
+// DesDecryptor.jsx
 import React, { useState } from 'react';
-import '../../styles/des.css';
+import '../../../styles/des.css';
 import Step0DesRoundFlow from './steps/Step0DesRoundFlow';
 import Step1InputPreparation from './steps/Step1InputPreparation';
 import Step2InitialPermutationAndSplit from './steps/Step2InitialPermutationAndSplit';
@@ -13,7 +13,7 @@ import Step8CiphertextOutput from './steps/Step8CiphertextOutput';
 import StepNavigator from '../../../components/StepNavigator';
 import HintBox from '../../../components/HintBox';
 import { AnimatePresence, motion } from 'framer-motion';
-import { DesEncryption } from '../../../components/DesEncryption';
+import { DesDecryption } from '../../../components/DesDecryption';
 
 const DesDecryptor = () => {
   const [cipherText, setCipherText] = useState('');
@@ -25,17 +25,10 @@ const DesDecryptor = () => {
   const handleConvert = (e) => {
     e.preventDefault();
     try {
-      const result = DesEncryption(cipherText, keyText, { decrypt: true }); // 🔁 Use reversed keys
-      const reversedRoundKeys = result.roundKeys?.slice().reverse();
-
-      setState({
-        ...result,
-        roundKeys: reversedRoundKeys,
-        decryptMode: true
-      });
-
-      setCipherText(result.paddedInput);
-      setKeyText(result.paddedKey);
+      const result = DesDecryption(cipherText, keyText);
+      setState(result);
+      setCipherText(result.paddedInput || cipherText);
+      setKeyText(result.paddedKey || keyText);
       setStep(0);
       setStepStatus((prev) => {
         const updated = [...prev];
@@ -93,7 +86,7 @@ const DesDecryptor = () => {
         </div>
 
         <div className="aes-button-row">
-          <button type="submit">Start Decryption</button>
+          <button type="submit">Start</button>
           <button type="button" onClick={handleReset}>Reset</button>
         </div>
       </form>
@@ -103,12 +96,12 @@ const DesDecryptor = () => {
       )}
 
       <AnimatePresence mode="wait">
-        {step === 0 && <motion.div key="step0" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><h3>Step 0: DES Round Structure</h3><HintBox step={0} /><Step0DesRoundFlow /><button onClick={() => { unlockNextStep(); setStep(1); }} style={{ marginTop: '1rem' }}>Next Step</button></motion.div>}
+        {step === 0 && <motion.div key="step0" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><h3>Step 0: DES Decryption Round Flow</h3><HintBox step={0} /><Step0DesRoundFlow /><button onClick={() => { unlockNextStep(); setStep(1); }} style={{ marginTop: '1rem' }}>Next Step</button></motion.div>}
         {step === 1 && <motion.div key="step1" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><h3>Step 1: Input Preparation</h3><HintBox step={1} /><Step1InputPreparation inputMatrix={state.inputMatrix} keyMatrix={state.keyMatrix} /><button onClick={() => { unlockNextStep(); setStep(2); }} style={{ marginTop: '1rem' }}>Next Step</button></motion.div>}
         {step === 2 && <motion.div key="step2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><h3>Step 2: Initial Permutation and Split</h3><HintBox step={2} /><Step2InitialPermutationAndSplit inputBits={state.inputBits} permutedBits={state.permutedBits} /><button onClick={() => { unlockNextStep(); setStep(3); }} style={{ marginTop: '1rem' }}>Next Step</button></motion.div>}
-        {step === 3 && <motion.div key="step3" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><h3>Step 3: Key Schedule</h3><HintBox step={3} /><Step3KeySchedule keyBits={state.keyBits} /><button onClick={() => { unlockNextStep(); setStep(4); }} style={{ marginTop: '1rem' }}>Next Step</button></motion.div>}
-        {step === 4 && <motion.div key="step4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><h3>Step 4: Round 1 (Decryption)</h3><HintBox step={4} /><Step4Round1 L0Bits={state.L0} R0Bits={state.R0} K1Bits={state.roundKeys?.[0]} expandedR={state.expandedR0} xorWithKey={state.xorR0K1} sboxOutput={state.sboxR0} pboxOutput={state.pboxR0} R1Bits={state.R1} /><button onClick={() => { unlockNextStep(); setStep(5); }} style={{ marginTop: '1rem' }}>Next Step</button></motion.div>}
-        {step === 5 && <motion.div key="step5" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><h3>Step 5: Rounds 2–16 (Decryption)</h3><HintBox step={5} /><Step5Rounds2to16 L0Bits={state.L0} R0Bits={state.R0} roundKeys={state.roundKeys} onFinalValuesCalculated={() => {}} /><button onClick={() => { unlockNextStep(); setStep(6); }} style={{ marginTop: '1rem' }}>Next Step</button></motion.div>}
+        {step === 3 && <motion.div key="step3" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><h3>Step 3: Key Schedule </h3><HintBox step={3} /><Step3KeySchedule keyBits={state.keyBits} /><button onClick={() => { unlockNextStep(); setStep(4); }} style={{ marginTop: '1rem' }}>Next Step</button></motion.div>}
+        {step === 4 && <motion.div key="step4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><h3>Step 4: Round 1 (K₁₆)</h3><HintBox step={4} /><Step4Round1 L0Bits={state.L0} R0Bits={state.R0} K1Bits={state.roundKeys?.[0]} expandedR={state.rounds?.[0]?.expandedR} xorWithKey={state.rounds?.[0]?.xor} sboxOutput={state.rounds?.[0]?.sbox} pboxOutput={state.rounds?.[0]?.pbox} R1Bits={state.rounds?.[0]?.newR} /><button onClick={() => { unlockNextStep(); setStep(5); }} style={{ marginTop: '1rem' }}>Next Step</button></motion.div>}
+        {step === 5 && <motion.div key="step5" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><h3>Step 5: Rounds 2–16 (K₁₅ to K₁)</h3><HintBox step={5} /><Step5Rounds2to16 L0Bits={state.L0} R0Bits={state.R0} roundKeys={state.roundKeys} onFinalValuesCalculated={() => {}} /><button onClick={() => { unlockNextStep(); setStep(6); }} style={{ marginTop: '1rem' }}>Next Step</button></motion.div>}
         {step === 6 && <motion.div key="step6" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><h3>Step 6: Final Swap</h3><HintBox step={6} /><Step6FinalSwap L16Bits={state.L16} R16Bits={state.R16} /><button onClick={() => { unlockNextStep(); setStep(7); }} style={{ marginTop: '1rem' }}>Next Step</button></motion.div>}
         {step === 7 && <motion.div key="step7" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><h3>Step 7: Final Permutation</h3><HintBox step={7} /><Step7FinalPermutation preOutputBits={state.preOutputBits} onCiphertextCalculated={() => {}} /><button onClick={() => { unlockNextStep(); setStep(8); }} style={{ marginTop: '1rem' }}>Next Step</button></motion.div>}
         {step === 8 && <motion.div key="step8" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><h3>Step 8: Plaintext Output</h3><HintBox step={8} /><Step8CiphertextOutput inputBits={state.inputBits} cipherBits={state.cipherBits} keyBits={state.keyBits} asciiOutput={state.asciiOutput} /></motion.div>}
@@ -118,4 +111,3 @@ const DesDecryptor = () => {
 };
 
 export default DesDecryptor;
-*/
