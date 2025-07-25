@@ -1,4 +1,3 @@
-import React from 'react';
 import MatrixTable from '../../../../components/MatrixTable';
 import { invMixColumns, generateInvMixMatrix } from '../../../../shared/aes/invMixColumns';
 import { AnimatePresence, motion } from 'framer-motion';

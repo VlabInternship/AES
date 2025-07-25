@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import MatrixTable from '../../../../components/MatrixTable';
 import { shiftRows } from '../../../../shared/aes/shiftRows';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -77,7 +77,6 @@ const Step5ShiftRows = ({ inputMatrix }) => {
                   <table><tbody><h5>{shiftedRowLabels[row]}</h5>
                     <tr>
                       {resultMatrix[row].map((val, col) => {
-                        const key = `${row}-${col}`;
                         return (
                           <motion.td
                             key ={col}

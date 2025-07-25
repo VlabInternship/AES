@@ -1,13 +1,11 @@
-import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import MatrixTable from '../../../../components/MatrixTable';
-
+import { matrixToHexColumnWise } from '../../../../shared/aes/toMatrix';
 const Step11FinalPlaintextOutput = ({ ciphertextMatrix, keyMatrix, finalMatrix }) => {
-    const asciiString = finalMatrix?.flat().map(hex => {
-        const val = parseInt(hex, 16);
-        return val >= 32 && val <= 126 ? String.fromCharCode(val) : '.';
-    }).join('');
-
+    // Convert the final matrix to ASCII string
+    // Assuming finalMatrix is a 4x4 matrix of hex values   
+    // and we need to convert it to ASCII
+    // Each hex value corresponds to a character in ASCII
     return (
         <div className='aes-container'>
             <AnimatePresence mode="wait">
@@ -19,11 +17,11 @@ const Step11FinalPlaintextOutput = ({ ciphertextMatrix, keyMatrix, finalMatrix }
                     transition={{ duration: 0.4 }}
                     className="step-row-grid">
                     <div className="step-box">
-                        <h4>Padded Ciphertext Matrix (HEX)</h4>
+                        <h4>Ciphertext Matrix (HEX)</h4>
                         <MatrixTable matrix={ciphertextMatrix} />
                     </div>
                     <div className="step-box">
-                        <h4>Padded Key Matrix (HEX)</h4>
+                        <h4>Key Matrix (HEX)</h4>
                         <MatrixTable matrix={keyMatrix} />
                     </div>
                     <div className="step-box">
@@ -38,14 +36,14 @@ const Step11FinalPlaintextOutput = ({ ciphertextMatrix, keyMatrix, finalMatrix }
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.4 }}
                     className="step-grid">
-                    
-                        <div className="step-box">
-                            <h4>Decrypted ASCII Output</h4>
-                            <div className="ascii-output">
-                                <code style={{ fontSize: '1.2rem' }}>{asciiString}</code>
-                            </div>
+                    <div className="step-box">
+                        <h4>Decrypted hex output</h4>
+                        <div className="hex-output">
+                            <code style={{ fontSize: '1.2rem' }}>{ matrixToHexColumnWise(finalMatrix).join(' ')}</code>
+
                         </div>
-                        
+                    </div>
+
                 </motion.div>
 
             </AnimatePresence>
@@ -55,4 +53,4 @@ const Step11FinalPlaintextOutput = ({ ciphertextMatrix, keyMatrix, finalMatrix }
 
 
 
-                export default Step11FinalPlaintextOutput;
+export default Step11FinalPlaintextOutput;

@@ -1,23 +1,22 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import MatrixTable from '../../../../components/MatrixTable';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AesEncryption } from '../../../../components/AesEncryption';
-
+import { matrixToHexColumnWise } from '../../../../shared/aes/toMatrix';
 const Step11CiphertextOutput = ({ inputHex, keyHex }) => {
   const {
-    paddedInputMatrix,
-    paddedKeyMatrix,
+    inputMatrix,
+    keyMatrix,
     cipherMatrix,
-    ascii
+
   } = useMemo(() => {
     if (inputHex.length === 16 && keyHex.length === 16) {
       return AesEncryption(inputHex, keyHex, true); // third arg = true for pre-padded input
     }
     return {
-      paddedInputMatrix: [],
-      paddedKeyMatrix: [],
+      inputMatrix: [],
+      keyMatrix: [],
       cipherMatrix: [],
-      ascii: ''
     };
   }, [inputHex, keyHex]);
 
@@ -31,16 +30,16 @@ const Step11CiphertextOutput = ({ inputHex, keyHex }) => {
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.4 }}
           className="step-row-grid">
-          {paddedInputMatrix.length > 0 && (
+          {inputMatrix.length > 0 && (
             <div className="step-box">
-              <h4 className="title">Padded Input Matrix (HEX)</h4>
-              <MatrixTable matrix={paddedInputMatrix} />
+              <h4 className="title">Input Matrix (HEX)</h4>
+              <MatrixTable matrix={inputMatrix} />
             </div>
           )}
-          {paddedKeyMatrix.length > 0 && (
+          {keyMatrix.length > 0 && (
             <div className="step-box">
-              <h4 className="title">Padded Key Matrix (HEX)</h4>
-              <MatrixTable matrix={paddedKeyMatrix} />
+              <h4 className="title">Key Matrix (HEX)</h4>
+              <MatrixTable matrix={keyMatrix} />
             </div>
           )}
           {cipherMatrix.length > 0 && (
@@ -51,19 +50,19 @@ const Step11CiphertextOutput = ({ inputHex, keyHex }) => {
           )}
         </motion.div>
         <motion.div
-          key="step6"
+          key="step7"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.4 }}
           className="step-grid">
-          {ascii && (
-            <div className="step-box">
-              <h4 className="title">Ciphertext (ASCII)</h4>
-              <p className="ascii-output">{ascii}</p>
+          <div className="step-box">
+            <h4>Ciphertext Output (HEX)</h4>
+            <div className="hex-output">
+              <code style={{ fontSize: '1.2rem' }}>{ matrixToHexColumnWise(cipherMatrix).join(' ')}</code>
             </div>
-          )}
-        </motion.div>
+          </div>
+</motion.div>
 </AnimatePresence>
 
     </div>

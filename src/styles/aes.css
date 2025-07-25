@@ -57,8 +57,7 @@
 }
 
 .hex-output {
-  width: 100%;
-  max-width: 700px;
+  max-width: fit-content;
   min-height: 42px;
   padding: 10px;
   font-size: 1rem;

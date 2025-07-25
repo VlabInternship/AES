@@ -1,15 +1,15 @@
 // src/ciphers/AES/AesSimulator.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import '../../../styles/aes.css';
 import { asciiToHex } from '../../../shared/aes/asciiToHex';
 import { toMatrix } from '../../../shared/aes/toMatrix';
-import { padInput } from '../../../shared/aes/padInput';
 import { expandKey } from '../../../shared/aes/keyExpansion';
 import { addRoundKey } from '../../../shared/aes/addRoundKey';
 import { invSubBytes } from '../../../shared/aes/invSubBytes';
 import { invShiftRows } from '../../../shared/aes/invShiftRows';
 import { invMixColumns } from '../../../shared/aes/invMixColumns';
 import { compute9to2 } from '../../../components/AesDecryption';
+
 import Step0AesDecryptRoundFlow from './steps/Step0AesDecryptRoundFlow';
 import Step1InputDisplay from './steps/Step1InputDisplay';
 import Step2KeyExpansion from './steps/Step2KeyExpansion';
@@ -18,8 +18,8 @@ import Step4InvShiftRows from './steps/Step4InvShiftRows';
 import Step5InvSubBytes from './steps/Step5InvSubBytes';
 import Step6InvMixColumns from './steps/Step6InvMixColumns';
 import Step11PlaintextOutput from './steps/Step11PlaintextOutput';
+
 import StepNavigator from '../../../components/StepNavigator';
-import HintBox from '../../../components/HintBox';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const AesDecryptor = () => {
@@ -34,27 +34,36 @@ const AesDecryptor = () => {
   const [step, setStep] = useState(-1);
   const [setStep7Output] = useState([]);
   const [stepStatus, setStepStatus] = useState(Array(10).fill(false));
+  const [inputMode, setInputMode] = useState('ascii'); // 'ascii' or 'hex'
 
   const handleConvert = (e) => {
     e.preventDefault();
     try {
-      const inputHexArr = asciiToHex(cipherText);
-      const keyHexArr = asciiToHex(keyText);
-      const paddedInput = padInput(inputHexArr);
-      const paddedKey = padInput(keyHexArr);
+      let inputHexArr, keyHexArr;
 
-      const inputMatrixFormatted = toMatrix(paddedInput);
-      const keyMatrixFormatted = toMatrix(paddedKey);
-      const { roundKeys, words } = expandKey(paddedKey);
+      if (inputMode === 'ascii') {
+        inputHexArr = asciiToHex(cipherText);
+        keyHexArr = asciiToHex(keyText);
+      } else {
+        // Hex input mode - validate and split
+        if (!/^[0-9a-fA-F]{32}$/.test(cipherText) || !/^[0-9a-fA-F]{32}$/.test(keyText)) {
+          throw new Error("HEX input must be 32 valid hex characters (16 bytes).");
+        }
+        inputHexArr = cipherText.match(/.{2}/g).map(h => h.toUpperCase());
+        keyHexArr = keyText.match(/.{2}/g).map(h => h.toUpperCase());
+      }
+
+      const inputMatrixFormatted = toMatrix(inputHexArr);
+      const keyMatrixFormatted = toMatrix(keyHexArr);
+      const { roundKeys, words } = expandKey(keyHexArr);
 
       setRoundKeys(roundKeys);
       setWords(words);
-      setInputHex(paddedInput);
-      setKeyHex(paddedKey);
+      setInputHex(inputHexArr);
+      setKeyHex(keyHexArr);
       setInputMatrix(inputMatrixFormatted);
       setKeyMatrix(keyMatrixFormatted);
       setStep(0);
-
       const updated = [...stepStatus];
       updated[0] = true;
       setStepStatus(updated);
@@ -62,7 +71,6 @@ const AesDecryptor = () => {
       alert(err.message);
     }
   };
-
   const handleReset = (e) => {
     e.preventDefault();
     setStep(-1);
@@ -101,32 +109,62 @@ const AesDecryptor = () => {
       <h2 style={{ textAlign: 'center' }}>
         AES Decryption
       </h2>
+      <div style={{ marginBottom: '1rem' }}>
+        <label>
+          <input
+            type="radio"
+            name="inputMode"
+            value="ascii"
+            checked={inputMode === 'ascii'}
+            onChange={() => setInputMode('ascii')}
+          />
+          ASCII Mode
+        </label>
+        <label style={{ marginLeft: '1rem' }}>
+          <input
+            type="radio"
+            name="inputMode"
+            value="hex"
+            checked={inputMode === 'hex'}
+            onChange={() => setInputMode('hex')}
+          />
+          HEX Mode
+        </label>
+      </div>
 
       <form onSubmit={handleConvert}>
         <div className="form-grid">
           <div className="form-left">
             <div>
               <label>Ciphertext</label>
-
               <input
                 type="text"
                 value={cipherText}
-                placeholder="e.g., 69c4e0d86a7b0430d8cdb78070b4c55a"
+                placeholder={inputMode === 'ascii' ? "Enter 16 ASCII characters" : "Enter 32 hex digits"}
                 onChange={(e) => setCipherText(e.target.value)}
-                maxLength={32}
+                pattern={inputMode === 'ascii' ? ".{16}" : "[0-9A-Fa-f]{32}"}
+                maxLength={inputMode === 'ascii' ? 16 : 32}
+                required
+                title={inputMode === 'ascii'
+                  ? "Plaintext must be exactly 16 ASCII characters"
+                  : "Plaintext must be 32 hexadecimal characters (16 bytes)"}
               />
             </div>
             <div>
               <label>Key</label>
-
               <input
                 type="text"
                 value={keyText}
-                placeholder="e.g., Two One Nine Two"
-
+                placeholder={inputMode === 'ascii' ? "Enter 16 ASCII characters" : "Enter 32 hex digits"}
                 onChange={(e) => setKeyText(e.target.value)}
-                maxLength={16}
+                pattern={inputMode === 'ascii' ? ".{16}" : "[0-9A-Fa-f]{32}"}
+                maxLength={inputMode === 'ascii' ? 16 : 32}
+                required
+                title={inputMode === 'ascii'
+                  ? "Key must be exactly 16 ASCII characters"
+                  : "Key must be 32 hexadecimal characters (16 bytes)"}
               />
+
             </div>
           </div>
 
@@ -173,7 +211,6 @@ const AesDecryptor = () => {
             transition={{ duration: 0.4 }}
           >
             <h3>Step 0: AES-128 Decryption Round Structure</h3>
-            <HintBox step={0} />
             <Step0AesDecryptRoundFlow />
             <button onClick={() => { unlockNextStep(); setStep(1); }} style={{ marginTop: '1rem' }}>
               Next Step
@@ -189,7 +226,6 @@ const AesDecryptor = () => {
             transition={{ duration: 0.4 }}
           >
             <h3>Step 1: Input Preparation</h3>
-            <HintBox step={1} />
             <Step1InputDisplay inputMatrix={inputMatrix} keyMatrix={keyMatrix} />
             <button onClick={() => { unlockNextStep(); setStep(2); }} style={{ marginTop: '1rem' }}>
               Next Step
@@ -206,7 +242,7 @@ const AesDecryptor = () => {
             transition={{ duration: 0.4 }}
           >
             <h3>Step 2: Key Expansion</h3>
-            <HintBox step={2} />
+
             <Step2KeyExpansion roundKeys={roundKeys} words={words} currentStep={step} />
             <button onClick={() => { unlockNextStep(); setStep(3); }} style={{ marginTop: '1rem' }}>
               Next Step
@@ -221,7 +257,7 @@ const AesDecryptor = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}>
             <h3>Step 3: Initial Round</h3>
-            <HintBox step={3} />
+
             <Step3AddRoundKeyDecrypt inputMatrix={inputMatrix} roundKey={roundKeys[10]} />
             <button onClick={() => { unlockNextStep(); setStep(4); }} style={{ marginTop: '1rem' }}>
               Next Step
@@ -236,7 +272,7 @@ const AesDecryptor = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}>
             <h3>Step 4: Round 10 - InvShiftRows</h3>
-            <HintBox step={4} />
+
             <Step4InvShiftRows inputMatrix={step3Output} />
             <button onClick={() => { unlockNextStep(); setStep(5); }} style={{ marginTop: '1rem' }}>Next Step</button>
           </motion.div>
@@ -249,7 +285,7 @@ const AesDecryptor = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}>
             <h3>Step 5: Round 10 - InvSubBytes</h3>
-            <HintBox step={5} />
+
             <Step5InvSubBytes inputMatrix={step4Output} />
             <button onClick={() => { unlockNextStep(); setStep(6); }} style={{ marginTop: '1rem' }}>Next Step</button>
           </motion.div>
@@ -262,7 +298,7 @@ const AesDecryptor = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}>
             <h3>Step 6: Round 10 - InvMixColumns</h3>
-            <HintBox step={6} />
+
             <Step6InvMixColumns inputMatrix={step5Output} />
             <button onClick={() => { unlockNextStep(); setStep(7); }} style={{ marginTop: '1rem' }}>Next Step</button>
           </motion.div>
@@ -276,7 +312,7 @@ const AesDecryptor = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}>
             <h3>Step 7: Round 10- AddRoundKey</h3>
-            <HintBox step={7} />
+
             <Step3AddRoundKeyDecrypt inputMatrix={step6Output} roundKey={roundKeys[9]} round={9} onOutput={setStep7Output} />
             <button onClick={() => { unlockNextStep(); setStep(8); }} style={{ marginTop: '1rem' }}>Next Step</button>
           </motion.div>
@@ -289,7 +325,7 @@ const AesDecryptor = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}>
             <h3>Step 8: Round 1- InvShiftRows</h3>
-            <HintBox step={8} />
+
             <Step4InvShiftRows inputMatrix={step8Input} />
             <button onClick={() => { unlockNextStep(); setStep(9); }} style={{ marginTop: '1rem' }}>Next Step</button>
           </motion.div>
@@ -302,7 +338,7 @@ const AesDecryptor = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}>
             <h3>Step 9: Round 1- InvSubBytes</h3>
-            <HintBox step={9} />
+
             <Step5InvSubBytes inputMatrix={step8Output} />
             <button onClick={() => { unlockNextStep(); setStep(10); }} style={{ marginTop: '1rem' }}>Next Step</button>
           </motion.div>
@@ -315,7 +351,7 @@ const AesDecryptor = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}>
             <h3>Step 10: Round 1- AddRoundKey</h3>
-            <HintBox step={10} />
+
             <Step3AddRoundKeyDecrypt inputMatrix={step9Output} roundKey={roundKeys[0]} round={1} />
             <button onClick={() => { unlockNextStep(); setStep(11); }} style={{ marginTop: '1rem' }}>
               Next Step
@@ -330,7 +366,7 @@ const AesDecryptor = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}>
             <h3>Step 11: Final Plaintext Output</h3>
-            <HintBox step={11} />
+
             <Step11PlaintextOutput
               ciphertextMatrix={toMatrix(inputHex)}
               keyMatrix={toMatrix(keyHex)}

@@ -1,6 +1,3 @@
-// src/components/Encryption.jsx
-import { asciiToHex } from '../shared/aes/asciiToHex';
-import { padInput } from '../shared/aes/padInput';
 import { toMatrix } from '../shared/aes/toMatrix';
 import { expandKey } from '../shared/aes/keyExpansion';
 import { addRoundKey } from '../shared/aes/addRoundKey';
@@ -8,16 +5,17 @@ import { subBytes } from '../shared/aes/subBytes';
 import { shiftRows } from '../shared/aes/shiftRows';
 import { mixColumns } from '../shared/aes/mixColumns';
 
-// src/components/Encryption.jsx
-export function AesEncryption(inputHex, keyHex, isPadded = false) {
-  const paddedInput = isPadded ? inputHex : padInput(asciiToHex(inputHex));
-  const paddedKey = isPadded ? keyHex : padInput(asciiToHex(keyHex));
+/**
+ * AES-128 ECB Encryption without any padding
+ * @param {string} inputHex - Array of 16 hex bytes (32 chars total)
+ * @param {string} keyHex - Array of 16 hex bytes (32 chars total)
+ */
+export function AesEncryption(inputHex, keyHex) {
+  const inputMatrix = toMatrix(inputHex);
+  const keyMatrix = toMatrix(keyHex);
+  const { roundKeys } = expandKey(keyHex);
 
-  const paddedInputMatrix = toMatrix(paddedInput).map(row => [...row]);
-  const paddedKeyMatrix = toMatrix(paddedKey);
-  const { roundKeys } = expandKey(paddedKey);
-
-  let state = addRoundKey(toMatrix(paddedInput), roundKeys[0]);
+  let state = addRoundKey(inputMatrix, roundKeys[0]);
 
   for (let round = 1; round <= 9; round++) {
     state = subBytes(state);
@@ -30,15 +28,11 @@ export function AesEncryption(inputHex, keyHex, isPadded = false) {
   state = shiftRows(state);
   state = addRoundKey(state, roundKeys[10]);
 
-  const ascii = state.flat().map(b => {
-    const code = parseInt(b, 16);
-    return code >= 32 && code <= 126 ? String.fromCharCode(code) : '.';
-  }).join('');
+
 
   return {
-    paddedInputMatrix,
-    paddedKeyMatrix,
+    inputMatrix: inputMatrix,
+    keyMatrix: keyMatrix,
     cipherMatrix: state,
-    ascii
   };
 }

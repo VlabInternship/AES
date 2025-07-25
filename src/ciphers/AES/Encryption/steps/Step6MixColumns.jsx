@@ -1,5 +1,4 @@
 // src/ciphers/AES/steps/Step5MixColumns.jsx
-import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import MatrixTable from '../../../../components/MatrixTable';
 import { mixColumns, generateMixMatrix } from '../../../../shared/aes/mixColumns';

@@ -1,4 +1,3 @@
-import React from 'react';
 import MatrixTable from '../../../../components/MatrixTable';
 import { motion, AnimatePresence } from 'framer-motion';
 
